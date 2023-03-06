@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer {
+  .container {
+    width: 60% !important;
+    margin: 0 auto;
+  }
+  button {
+    background-color: #1565c0 !important;
+  }
+}
