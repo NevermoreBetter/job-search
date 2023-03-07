@@ -1,11 +1,14 @@
 import Inbox from "@/components/Inbox";
+import { AuthProvider } from "@/context/AuthContext";
 import React from "react";
 
 const InboxPage = () => {
   return (
-    <div>
-      <Inbox />
-    </div>
+    <AuthProvider>
+      <div>
+        <Inbox />
+      </div>
+    </AuthProvider>
   );
 };
 

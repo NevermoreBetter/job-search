@@ -1,15 +1,13 @@
-import Jobs from "@/components/Jobs";
+import JobCard from "@/components/JobCard";
 import React from "react";
 import { AuthProvider } from "@/context/AuthContext";
 
-const JobsPage = () => {
+const JobCardPage = () => {
   return (
     <AuthProvider>
-      <div>
-        <Jobs />
-      </div>
+      <JobCard />
     </AuthProvider>
   );
 };
 
-export default JobsPage;
+export default JobCardPage;

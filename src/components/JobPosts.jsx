@@ -1,17 +1,43 @@
-import { nanoid } from "nanoid";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import {
+  doc,
+  setDoc,
+  deleteField,
+  collection,
+  addDoc,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "@/firebase/firebase";
+import useFetchJobs from "@/hooks/fetchJobs";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
-const Posts = ({ posts, loading }) => {
-  if (loading) {
-    return <h2>Loading...</h2>;
+const JobPosts = () => {
+  const [jobsData, setJobsData] = useState([]);
+  const dbRef = collection(db, "jobs");
+  //TODO: Пагинация здесь
+  async function getJobs() {
+    await getDocs(dbRef).then((response) => {
+      setJobsData(
+        response.docs.map((data) => {
+          return { ...data.data(), id: data.id };
+        })
+      );
+    });
   }
+
+  useEffect(() => {
+    getJobs();
+  }, []);
+
   return (
-    <ul>
-      {posts.map((post) => (
-        <li key={nanoid}>{post.title}</li>
-      ))}
-    </ul>
+    <div className="container">
+      {jobsData.map((data) => {
+        return <div>{data.name}</div>;
+      })}
+    </div>
   );
 };
 
-export default Posts;
+export default JobPosts;
