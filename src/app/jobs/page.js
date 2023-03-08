@@ -1,4 +1,4 @@
-import Jobs from "@/components/Jobs";
+import Jobs from "@/components/job/Jobs";
 import React from "react";
 import { AuthProvider } from "@/context/AuthContext";
 

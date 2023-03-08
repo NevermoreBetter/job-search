@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import Footer from "../Footer";
+import Navbar from "../Navbar";
 import Posts from "./JobCard";
 import axios from "axios";
-import Pagination from "./Pagination";
+import Pagination from "../Pagination";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "../../firebase/firebase";
 import useFetchJobs from "@/hooks/fetchJobs";
 import Link from "next/link";
 import JobPosts from "./JobPosts";

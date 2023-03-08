@@ -1,4 +1,4 @@
-import JobCard from "@/components/JobCard";
+import JobCard from "@/components/job/JobCard";
 import React from "react";
 import { AuthProvider } from "@/context/AuthContext";
 

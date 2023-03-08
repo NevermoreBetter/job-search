@@ -10,8 +10,8 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import useFetchJobs from "@/hooks/fetchJobs";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Navbar from "../Navbar";
+import Footer from "../Footer";
 
 const JobPosts = () => {
   const [jobsData, setJobsData] = useState([]);
@@ -20,6 +20,11 @@ const JobPosts = () => {
   async function getJobs() {
     await getDocs(dbRef).then((response) => {
       setJobsData(
+        response.docs.map((data) => {
+          return { ...data.data(), id: data.id };
+        })
+      );
+      console.log(
         response.docs.map((data) => {
           return { ...data.data(), id: data.id };
         })
@@ -34,7 +39,20 @@ const JobPosts = () => {
   return (
     <div className="container">
       {jobsData.map((data) => {
-        return <div>{data.name}</div>;
+        return (
+          <div className="mb-8">
+            {data.Name}
+            {data.Salary.map((salary) => {
+              return `${salary}$`;
+            }).join("-")}
+            <br />
+            {data.Description}
+            <br />
+            {data.Author}
+            <br />
+            {data.City.join(", ")}
+          </div>
+        );
       })}
     </div>
   );
