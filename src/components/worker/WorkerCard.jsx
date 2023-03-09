@@ -29,17 +29,19 @@ const MenuProps = {
 };
 
 const cities = ["Миколаїв", "Київ", "Одеса"];
+const type = ["Remote", "On site", "Part time"];
 
-const JobCard = () => {
+const WorkerCard = () => {
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [distance, setDistance] = useState();
   const [cityName, setCityName] = useState([]);
+  const [typeName, setTypeName] = useState([]);
   const [salary, setSalary] = useState([100, 1000]);
   const [experience, setExperience] = useState();
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
-  const dbRef = collection(db, "jobs");
+  const dbRef = collection(db, "workers");
 
   const handleAddCity = (event) => {
     const {
@@ -48,16 +50,22 @@ const JobCard = () => {
     setCityName(typeof value === "string" ? value.split(",") : value);
   };
 
+  const handleAddType = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setTypeName(typeof value === "string" ? value.split(",") : value);
+  };
+
   const handleAddSalary = (event, newValue) => {
     setSalary(newValue);
   };
 
-  async function handleAddJob() {
+  async function handleAddWorker() {
     addDoc(dbRef, {
       Name: name,
-      Description: description,
       Author: userName,
-      Distance: distance,
+      Type: typeName,
       City: cityName,
       Salary: salary,
       Experience: experience,
@@ -65,9 +73,6 @@ const JobCard = () => {
     })
       .then(() => {
         alert("data sent");
-        setName("");
-        setDescription("");
-        setDistance("");
       })
       .catch((err) => {
         console.log(err);
@@ -78,45 +83,55 @@ const JobCard = () => {
     <div className="create container">
       <Navbar />
       <div>
-        <label htmlFor="jobName">Job Name</label>
+        <label htmlFor="workerName">Посада</label>
         <input
-          id="jobName"
+          id="workerName"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="jobDescription">Description</label>
+        <label htmlFor="workerDescription">Досягнення</label>
         <input
-          id="jobDescription"
+          id="workerDescription"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="jobType">Remote/Office</label>
+        <label htmlFor="workerType">Тип зайнятості</label>
 
         <FormControl>
           <Select
-            id="jobType"
-            value={distance}
-            onChange={(e) => setDistance(e.target.value)}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+            labelId="demo-multiple-chip-label"
+            id="demo-multiple-chip"
+            multiple
+            value={typeName}
+            onChange={handleAddType}
+            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+            renderValue={(selected) => (
+              <Box>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
           >
-            <MenuItem value="Remote">Remote</MenuItem>
-            <MenuItem value="On site">On site</MenuItem>
-            <MenuItem value="Candidtae select">Candidtae select</MenuItem>
+            {type.map((name) => (
+              <MenuItem key={name} value={name}>
+                {name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </div>
       <div>
-        <label htmlFor="jobCity">City</label>
+        <label htmlFor="workerCity">Місто</label>
         <div>
           <FormControl>
-            <InputLabel id="demo-multiple-chip-label-1">Місто</InputLabel>
             <Select
-              labelId="demo-multiple-chip-label-1"
+              labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
               value={cityName}
@@ -141,8 +156,8 @@ const JobCard = () => {
         </div>
       </div>
       <div>
-        <label htmlFor="jobSalary">Salary</label>
-        <div id="jobSalary">
+        <label htmlFor="workerSalary">Очікувана зарплата</label>
+        <div id="workerSalary">
           <Slider
             getAriaLabel={() => "Salary range"}
             value={salary}
@@ -154,7 +169,7 @@ const JobCard = () => {
         </div>
       </div>
       <div>
-        <label htmlFor="jobExperience">Experience</label>
+        <label htmlFor="workerExperience">Досвід роботи</label>
 
         <FormControl>
           <Select
@@ -171,10 +186,12 @@ const JobCard = () => {
           </Select>
         </FormControl>
       </div>
-      <button onClick={handleAddJob}>ADD</button>
+      <button onClick={handleAddWorker}>ADD</button>
       <Footer />
     </div>
   );
 };
 
-export default JobCard;
+//-------------------------------------------=======================TODO: сделать в профиле==========================---------------------------------------------
+
+export default WorkerCard;

@@ -1,4 +1,4 @@
-import Worker from "@/components/Worker";
+import Worker from "@/components/worker/Worker";
 import { AuthProvider } from "@/context/AuthContext";
 
 const WorkerPage = () => {

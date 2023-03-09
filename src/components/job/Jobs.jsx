@@ -26,9 +26,7 @@ const Jobs = () => {
   return (
     <div className="jobs container">
       <Navbar />
-      <Link href="/jobs/create-job">
-        <div>Add post</div>
-      </Link>
+
       <JobPosts />
       {/* <Pagination
         postsPerPage={postsPerPage}

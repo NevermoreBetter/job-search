@@ -50,7 +50,11 @@ const Navbar = () => {
       <div className="flex gap-8">
         <Link href="/inbox">Inbox</Link>
         <Link href="/worker">Workers</Link>
+        <Link href="/worker/create-worker">Add worker</Link>
         <Link href="/jobs">Jobs</Link>
+        <Link href="/jobs/create-job">
+          <div>Add job</div>
+        </Link>
       </div>
       <div className="flex gap-8">
         {currentUser !== null ? (

@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
+import Footer from "../Footer";
+import Navbar from "../Navbar";
 import Posts from "./WorkerPosts";
 import axios from "axios";
-import Pagination from "./Pagination";
+import Pagination from "../Pagination";
 
 const Worker = () => {
   const [posts, setPosts] = useState([]);
