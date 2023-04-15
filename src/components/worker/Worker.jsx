@@ -6,6 +6,7 @@ import Navbar from "../Navbar";
 import Posts from "./WorkerPosts";
 import axios from "axios";
 import Pagination from "../Pagination";
+import WorkerPosts from "./WorkerPosts";
 
 const Worker = () => {
   const [posts, setPosts] = useState([]);
@@ -31,12 +32,13 @@ const Worker = () => {
   return (
     <div className="jobs container">
       <Navbar />
-      <Posts posts={currentPosts} loading={loading} />
+      <WorkerPosts />
+      {/* <Posts posts={currentPosts} loading={loading} />
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={posts.length}
         paginate={paginate}
-      />
+      /> */}
       <Footer />
     </div>
   );

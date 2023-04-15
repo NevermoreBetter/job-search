@@ -9,16 +9,17 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import useFetchJobs from "@/hooks/fetchJobs";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
 import Link from "next/link";
 
 const JobPosts = () => {
   const [jobsData, setJobsData] = useState([]);
-  const [date, setDate] = useState([]);
+  const [readMore, setReadMore] = useState(false);
   const dbRef = collection(db, "jobs");
   //---------------------========================TODO: Пагинация здесь========================================---------------------------
+  const toggleBtn = () => {
+    setReadMore((prevState) => !prevState);
+  };
+
   async function getJobs() {
     await getDocs(dbRef).then((response) => {
       setJobsData(
@@ -40,24 +41,29 @@ const JobPosts = () => {
 
   return (
     <div className="container">
+      <div>
+        There {jobsData.length <= 1 ? "is" : "are"} {jobsData.length}{" "}
+        {jobsData.length <= 1 ? "vacation" : "vacations"}
+      </div>
       {jobsData.map((data) => {
         return (
-          <Link href={`/jobs/${data.id}`}>
-            <div className="mb-8">
-              {data.Name}
-              {data.Salary.map((salary) => {
-                return `${salary}$`;
-              }).join("-")}
-              <br />
-              {data.Description}
-              <br />
-              {data.Author}
-              <br />
-              {data.City.join(", ")}
-              <br />
-              {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
-            </div>
-          </Link>
+          <div className="mb-8">
+            <Link href={`/jobs/${data.id}`}>{data.Name}</Link>
+            {data.Salary.map((salary) => {
+              return `${salary}$`;
+            }).join("-")}
+            <br />
+            {readMore ? data.Description : data.Description.substr(0, 1)}
+            <button onClick={toggleBtn}>
+              {!readMore ? "Show More" : "Show Less"}
+            </button>
+            <br />
+            {data.Author}
+            <br />
+            {data.City.join(", ")}
+            <br />
+            {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
+          </div>
         );
       })}
     </div>
