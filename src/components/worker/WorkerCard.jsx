@@ -69,6 +69,7 @@ const WorkerCard = () => {
       City: cityName,
       Salary: salary,
       Experience: experience,
+      UserId: currentUser.uid,
       Date: new Date(),
     })
       .then(() => {
