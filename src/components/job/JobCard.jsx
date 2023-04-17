@@ -77,45 +77,57 @@ const JobCard = () => {
   return (
     <div className="create container">
       <Navbar />
-      <div>
-        <label htmlFor="jobName">Job Name</label>
+      <div className="mb-4">
+        <label htmlFor="jobName" className="mr-4">
+          Посада
+        </label>
         <input
+          className="rounded-md border border-black outline-none p-2"
           id="jobName"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div>
-        <label htmlFor="jobDescription">Description</label>
+      <div className="mb-4">
+        <label htmlFor="jobDescription" className="mr-4">
+          Опис
+        </label>
         <input
+          className="rounded-md border border-black outline-none p-2"
           id="jobDescription"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
-      <div>
-        <label htmlFor="jobType">Remote/Office</label>
+      <div className="mb-4 flex items-center">
+        <label htmlFor="jobType" className="mr-4">
+          Тип зайнятості
+        </label>
 
         <FormControl>
           <Select
+            className="min-w-[10rem]"
             id="jobType"
             value={distance}
             onChange={(e) => setDistance(e.target.value)}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="Remote">Remote</MenuItem>
-            <MenuItem value="On site">On site</MenuItem>
-            <MenuItem value="Candidtae select">Candidtae select</MenuItem>
+            <MenuItem value="Remote">Дистанційно</MenuItem>
+            <MenuItem value="On site">В офісі</MenuItem>
+            <MenuItem value="Candidtae select">На розгляд кандидата</MenuItem>
           </Select>
         </FormControl>
       </div>
-      <div>
-        <label htmlFor="jobCity">City</label>
+      <div className="mb-4 flex items-center">
+        <label htmlFor="jobCity" className="mr-4">
+          Розташування офісу
+        </label>
         <div>
           <FormControl>
             <InputLabel id="demo-multiple-chip-label-1">Місто</InputLabel>
             <Select
+              className="min-w-[10rem]"
               labelId="demo-multiple-chip-label-1"
               id="demo-multiple-chip"
               multiple
@@ -140,8 +152,10 @@ const JobCard = () => {
           </FormControl>
         </div>
       </div>
-      <div>
-        <label htmlFor="jobSalary">Salary</label>
+      <div className="mb-4">
+        <label htmlFor="jobSalary" className="mr-4">
+          Зарплата
+        </label>
         <div id="jobSalary">
           <Slider
             getAriaLabel={() => "Salary range"}
@@ -153,25 +167,28 @@ const JobCard = () => {
           />
         </div>
       </div>
-      <div>
-        <label htmlFor="jobExperience">Experience</label>
+      <div className="mb-4 flex items-center">
+        <label htmlFor="jobExperience" className="mr-4">
+          Досвід
+        </label>
 
         <FormControl>
           <Select
+            className="min-w-[7rem]"
             value={distance}
             onChange={(e) => setExperience(e.target.value)}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="No experience">No experience</MenuItem>
-            <MenuItem value="1 year">1 year</MenuItem>
-            <MenuItem value="2 years">2 years</MenuItem>
-            <MenuItem value="3 years">3 years</MenuItem>
-            <MenuItem value="5 years">5 years</MenuItem>
+            <MenuItem value="No experience">Без досвіду</MenuItem>
+            <MenuItem value="1 year">1 рік</MenuItem>
+            <MenuItem value="2 years">2 рік</MenuItem>
+            <MenuItem value="3 years">3 рік</MenuItem>
+            <MenuItem value="5 years">5 рік</MenuItem>
           </Select>
         </FormControl>
       </div>
-      <button onClick={handleAddJob}>ADD</button>
+      <button onClick={handleAddJob}>Додати</button>
       <Footer />
     </div>
   );

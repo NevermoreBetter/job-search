@@ -41,7 +41,7 @@ const JobPosts = () => {
 
   return (
     <div className="container">
-      <div>
+      <div className="mb-4">
         There {jobsData.length <= 1 ? "is" : "are"} {jobsData.length}{" "}
         {jobsData.length <= 1 ? "vacation" : "vacations"}
       </div>

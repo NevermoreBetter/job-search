@@ -43,9 +43,16 @@ const Inbox = () => {
       {messageToShow.map((message) => {
         return (
           <>
-            <div>{message.Message}</div>
+            <div className="flex gap-2">
+              <h3>Від: </h3>
+              {message.SenderName}
+            </div>
+
             <br />
-            <div>{message.SenderName}</div>
+            <div className="flex gap-2">
+              <h3>Повідомлення: </h3>
+              {message.Message}
+            </div>
           </>
         );
       })}

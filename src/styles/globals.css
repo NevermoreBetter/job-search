@@ -11,3 +11,7 @@
     background-color: #1565c0 !important;
   }
 }
+
+body {
+  padding-top: 1rem;
+}

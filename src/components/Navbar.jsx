@@ -42,12 +42,12 @@ const Navbar = () => {
   }
 
   return (
-    <div className="flex sticky justify-between ">
+    <div className="flex sticky justify-between items-center mb-8">
       <Link href="/">
         {" "}
         <GrUserWorker />
       </Link>
-      <div className="flex gap-8">
+      <div className="flex gap-12 h-fit">
         <Link href="/inbox">Inbox</Link>
         <Link href="/worker">Workers</Link>
         <Link href="/worker/create-worker">Add worker</Link>
@@ -56,16 +56,16 @@ const Navbar = () => {
           <div>Add job</div>
         </Link>
       </div>
-      <div className="flex gap-8">
+      <div className="flex gap-8 ">
         {currentUser !== null ? (
           <div onClick={logout}>
             <Image
+              className="rounded-full"
               src={currentUser.photoURL}
-              width={100}
-              height={100}
+              width={50}
+              height={50}
               alt="profile picture"
             />
-            {currentUser.displayName}
           </div>
         ) : (
           <Button onClick={loginHandler}>Log in</Button>

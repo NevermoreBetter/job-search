@@ -16,6 +16,8 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import Chip from "@mui/material/Chip";
 import Slider from "@mui/material/Slider";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -29,25 +31,23 @@ const MenuProps = {
 };
 
 const cities = ["Миколаїв", "Київ", "Одеса"];
-const type = ["Remote", "On site", "Part time"];
+const type = ["Дистанційно", "В офісі", "Фріланс"];
 
 const WorkerCard = () => {
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [distance, setDistance] = useState();
-  const [cityName, setCityName] = useState([]);
+  const [cityName, setCityName] = useState();
   const [typeName, setTypeName] = useState([]);
   const [salary, setSalary] = useState([100, 1000]);
   const [experience, setExperience] = useState();
+  const [movie, setMovie] = useState([]);
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
   const dbRef = collection(db, "workers");
 
-  const handleAddCity = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setCityName(typeof value === "string" ? value.split(",") : value);
+  const handleAddCity = (event, value) => {
+    setCityName(value);
   };
 
   const handleAddType = (event) => {
@@ -83,27 +83,37 @@ const WorkerCard = () => {
   return (
     <div className="create container">
       <Navbar />
-      <div>
-        <label htmlFor="workerName">Посада</label>
+      <div className="mb-4">
+        <label htmlFor="workerName" className="mr-4">
+          Посада
+        </label>
         <input
+          className="rounded-md border border-black outline-none p-2"
           id="workerName"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div>
-        <label htmlFor="workerDescription">Досягнення</label>
+      <div className="mb-4">
+        <label htmlFor="workerDescription" className="mr-4 ">
+          Досягнення
+        </label>
         <input
+          className="rounded-md border border-black outline-none p-2"
           id="workerDescription"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </div>
-      <div>
-        <label htmlFor="workerType">Тип зайнятості</label>
+      <div className="mb-4 items-center flex">
+        <label htmlFor="workerType" className="mr-4 ">
+          Тип зайнятості
+        </label>
 
         <FormControl>
+          <InputLabel id="demo-simple-select-helper-label">Тип</InputLabel>
           <Select
+            className="min-w-[10rem]"
             labelId="demo-multiple-chip-label"
             id="demo-multiple-chip"
             multiple
@@ -127,33 +137,25 @@ const WorkerCard = () => {
           </Select>
         </FormControl>
       </div>
-      <div>
-        <label htmlFor="workerCity">Місто</label>
+      <div className="mb-4 flex items-center">
+        <label htmlFor="workerCity" className="mr-4 ">
+          Місто
+        </label>
         <div>
-          <FormControl>
-            <Select
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={cityName}
-              onChange={handleAddCity}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {cities.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Autocomplete
+            multiple
+            id="tags-standard"
+            options={cities}
+            onChange={handleAddCity}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="Multiple values"
+                placeholder="City"
+              />
+            )}
+          />
         </div>
       </div>
       <div>
@@ -169,25 +171,29 @@ const WorkerCard = () => {
           />
         </div>
       </div>
-      <div>
-        <label htmlFor="workerExperience">Досвід роботи</label>
+      <div className="mb-4 flex items-center">
+        <label htmlFor="workerExperience" className="mr-4 ">
+          Досвід роботи
+        </label>
 
         <FormControl>
           <Select
+            className="min-w-[7rem]"
             value={distance}
             onChange={(e) => setExperience(e.target.value)}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="No experience">No experience</MenuItem>
-            <MenuItem value="1 year">1 year</MenuItem>
-            <MenuItem value="2 years">2 years</MenuItem>
-            <MenuItem value="3 years">3 years</MenuItem>
-            <MenuItem value="5 years">5 years</MenuItem>
+            <MenuItem value="No experience">Без досвіду</MenuItem>
+            <MenuItem value="1 year">1 рік</MenuItem>
+            <MenuItem value="2 years">2 роки</MenuItem>
+            <MenuItem value="3 years">3 роки</MenuItem>
+            <MenuItem value="5 years">5 років</MenuItem>
           </Select>
         </FormControl>
       </div>
-      <button onClick={handleAddWorker}>ADD</button>
+
+      <button onClick={handleAddWorker}>Додати</button>
       <Footer />
     </div>
   );

@@ -57,15 +57,26 @@ const WorkerDetail = ({ params }) => {
   }, []);
   console.log(currentUser.uid);
   return (
-    <>
+    <div className="worker-detail container">
       <Navbar />
       <>
         {workerDetails.map((data) => {
           return (
             <div className="mb-8">
               {data.Author}
+              {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
               <br />
-              {data.Salary}
+              {data.Name}
+              <br />
+              {data.Salary.map((salary) => {
+                return `${salary}$`;
+              }).join("-")}
+              <br />
+              {data.City}
+              <br />
+              {data.Experience}
+              <br />
+              {data.Type}
               <br />
               {data.id}
             </div>
@@ -84,7 +95,7 @@ const WorkerDetail = ({ params }) => {
           <button type="submit">Send</button>
         </form>
       </>
-    </>
+    </div>
   );
 };
 

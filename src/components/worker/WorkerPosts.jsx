@@ -44,29 +44,31 @@ const WorkerPosts = () => {
 
   return (
     <div className="container">
-      <div>
-        City:
-        <select onChange={(e) => setCityFilter(e.target.value)}>
-          <option value="all">All</option>
-          <option value="Київ">Київ</option>
-          <option value="Миколаїв">Миколаїв</option>
-          <option value="Одеса">Одеса</option>
-        </select>
+      <div className="flex gap-8 mb-8">
+        <div className="flex gap-2">
+          <h3>City:</h3>
+          <select onChange={(e) => setCityFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="Київ">Київ</option>
+            <option value="Миколаїв">Миколаїв</option>
+            <option value="Одеса">Одеса</option>
+          </select>
+        </div>
+        <div className="flex gap-2">
+          <h3>Type:</h3>
+          <select onChange={(e) => setTypeFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="On site">On site</option>
+            <option value="Part time">Part time</option>
+            <option value="Remote">Remote</option>
+          </select>
+        </div>
       </div>
       <div>
-        Type:
-        <select onChange={(e) => setTypeFilter(e.target.value)}>
-          <option value="all">All</option>
-          <option value="On site">On site</option>
-          <option value="Part time">Part time</option>
-          <option value="Remote">Remote</option>
-        </select>
-      </div>
-      <div>
-        <div>
+        <h2 className="mb-4">
           There {dataToShow.length <= 1 ? "is" : "are"} {dataToShow.length}{" "}
           {dataToShow.length <= 1 ? "resume" : "resumes"}
-        </div>
+        </h2>
         {dataToShow.map((data) => {
           return (
             <div className="mb-8">
