@@ -18,6 +18,7 @@ import Navbar from "@/components/Navbar";
 const WorkerDetail = ({ params }) => {
   const { id } = params;
   const [workersData, setWorkersData] = useState([]);
+
   const dbRef = collection(db, "workers");
   const messageDbRef = collection(db, "messages");
   const workerDetails = workersData.filter((worker) => worker.id == id);
@@ -42,7 +43,6 @@ const WorkerDetail = ({ params }) => {
         console.log(err);
       });
   }
-  console.log(currentUser);
   async function getWorkers() {
     await getDocs(dbRef).then((response) => {
       setWorkersData(
@@ -52,14 +52,16 @@ const WorkerDetail = ({ params }) => {
       );
     });
   }
+
   useEffect(() => {
     getWorkers();
+    getIds();
   }, []);
-  console.log(currentUser.uid);
   return (
     <div className="worker-detail container">
       <Navbar />
       <>
+        {idData}
         {workerDetails.map((data) => {
           return (
             <div className="mb-8">

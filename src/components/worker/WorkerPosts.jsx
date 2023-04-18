@@ -16,6 +16,8 @@ const WorkerPosts = () => {
   const [cityFilter, setCityFilter] = useState("all"); // initial city filter value is "all"
   const [typeFilter, setTypeFilter] = useState("all"); // initial type filter value is "all"
   const dbRef = collection(db, "workers");
+  const [idData, setIdData] = useState(0);
+  const { currentUser } = useAuth();
   //---------------------========================TODO: Пагинация здесь========================================---------------------------
 
   const dataToShow = workersData
@@ -37,6 +39,10 @@ const WorkerPosts = () => {
       );
     });
   }
+
+  console.log(
+   if(workersData.filter((data) => {return data.UserId == currentUser.uid;})>0){alert("cannot create")} else {alert("create")}
+  );
 
   useEffect(() => {
     getWorkers();
