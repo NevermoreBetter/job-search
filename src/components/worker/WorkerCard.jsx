@@ -8,7 +8,6 @@ import { db } from "@/firebase/firebase";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
@@ -18,6 +17,9 @@ import Chip from "@mui/material/Chip";
 import Slider from "@mui/material/Slider";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -41,7 +43,7 @@ const WorkerCard = () => {
   const [typeName, setTypeName] = useState([]);
   const [salary, setSalary] = useState([100, 1000]);
   const [experience, setExperience] = useState();
-  const [movie, setMovie] = useState([]);
+  const [open, setOpen] = useState(false);
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
   const dbRef = collection(db, "workers");
@@ -61,6 +63,31 @@ const WorkerCard = () => {
     setSalary(newValue);
   };
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   async function handleAddWorker() {
     addDoc(dbRef, {
       Name: name,
@@ -73,7 +100,7 @@ const WorkerCard = () => {
       Date: new Date(),
     })
       .then(() => {
-        alert("data sent");
+        handleClick();
       })
       .catch((err) => {
         console.log(err);
@@ -151,7 +178,7 @@ const WorkerCard = () => {
               <TextField
                 {...params}
                 variant="standard"
-                label="Multiple values"
+                label="Місто"
                 placeholder="City"
               />
             )}
@@ -194,6 +221,15 @@ const WorkerCard = () => {
       </div>
 
       <button onClick={handleAddWorker}>Додати</button>
+      <div>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Заяву створено"
+          action={action}
+        />
+      </div>
       <Footer />
     </div>
   );

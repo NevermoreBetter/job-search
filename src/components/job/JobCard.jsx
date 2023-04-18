@@ -8,7 +8,6 @@ import { db } from "@/firebase/firebase";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
@@ -16,6 +15,9 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import Chip from "@mui/material/Chip";
 import Slider from "@mui/material/Slider";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -31,6 +33,7 @@ const MenuProps = {
 const cities = ["Миколаїв", "Київ", "Одеса"];
 
 const JobCard = () => {
+  const [open, setOpen] = useState(false);
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [distance, setDistance] = useState();
@@ -52,6 +55,31 @@ const JobCard = () => {
     setSalary(newValue);
   };
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   async function handleAddJob() {
     addDoc(dbRef, {
       Name: name,
@@ -64,7 +92,7 @@ const JobCard = () => {
       Date: new Date(),
     })
       .then(() => {
-        alert("data sent");
+        handleClick();
         setName("");
         setDescription("");
         setDistance("");
@@ -189,6 +217,15 @@ const JobCard = () => {
         </FormControl>
       </div>
       <button onClick={handleAddJob}>Додати</button>
+      <div>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Заяву створено"
+          action={action}
+        />
+      </div>
       <Footer />
     </div>
   );
