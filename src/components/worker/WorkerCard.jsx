@@ -170,17 +170,13 @@ const WorkerCard = () => {
         </label>
         <div>
           <Autocomplete
+            className="min-w-[7rem]"
             multiple
             id="tags-standard"
             options={cities}
             onChange={handleAddCity}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                label="Місто"
-                placeholder="City"
-              />
+              <TextField {...params} variant="standard" label="Місто" />
             )}
           />
         </div>

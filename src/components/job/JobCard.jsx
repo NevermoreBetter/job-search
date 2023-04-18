@@ -10,11 +10,9 @@ import Footer from "../Footer";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
 import Slider from "@mui/material/Slider";
+import Autocomplete from "@mui/material/Autocomplete";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -44,11 +42,8 @@ const JobCard = () => {
   const userName = currentUser.displayName;
   const dbRef = collection(db, "jobs");
 
-  const handleAddCity = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setCityName(typeof value === "string" ? value.split(",") : value);
+  const handleAddCity = (event, value) => {
+    setCityName(value);
   };
 
   const handleAddSalary = (event, newValue) => {
@@ -152,32 +147,16 @@ const JobCard = () => {
           Розташування офісу
         </label>
         <div>
-          <FormControl>
-            <InputLabel id="demo-multiple-chip-label-1">Місто</InputLabel>
-            <Select
-              className="min-w-[10rem]"
-              labelId="demo-multiple-chip-label-1"
-              id="demo-multiple-chip"
-              multiple
-              value={cityName}
-              onChange={handleAddCity}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {cities.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Autocomplete
+            className="min-w-[7rem]"
+            multiple
+            id="tags-standard"
+            options={cities}
+            onChange={handleAddCity}
+            renderInput={(params) => (
+              <TextField {...params} variant="standard" label="Місто" />
+            )}
+          />
         </div>
       </div>
       <div className="mb-4">
