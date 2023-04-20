@@ -40,10 +40,6 @@ const WorkerPosts = () => {
     });
   }
 
-  console.log(
-   if(workersData.filter((data) => {return data.UserId == currentUser.uid;})>0){alert("cannot create")} else {alert("create")}
-  );
-
   useEffect(() => {
     getWorkers();
   }, []);

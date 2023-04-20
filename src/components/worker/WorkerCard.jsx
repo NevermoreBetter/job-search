@@ -3,7 +3,14 @@
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  deleteField,
+  collection,
+  addDoc,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -38,6 +45,7 @@ const type = ["Дистанційно", "В офісі", "Фріланс"];
 const WorkerCard = () => {
   const [name, setName] = useState();
   const [description, setDescription] = useState();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [distance, setDistance] = useState();
   const [cityName, setCityName] = useState();
   const [typeName, setTypeName] = useState([]);
@@ -45,8 +53,10 @@ const WorkerCard = () => {
   const [experience, setExperience] = useState();
   const [open, setOpen] = useState(false);
   const { currentUser } = useAuth();
+  const [workersData, setWorkersData] = useState([]);
   const userName = currentUser.displayName;
   const dbRef = collection(db, "workers");
+  const existingId = workersData.some((data) => data.UserId == currentUser.uid);
 
   const handleAddCity = (event, value) => {
     setCityName(value);
@@ -71,9 +81,30 @@ const WorkerCard = () => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
+
+  async function getWorkers() {
+    await getDocs(dbRef).then((response) => {
+      setWorkersData(
+        response.docs.map((data) => {
+          return { ...data.data(), id: data.id };
+        })
+      );
+    });
+  }
+
+  console.log(existingId);
+  function handleExistingId() {
+    if (existingId) {
+      // setIsButtonDisabled(true);
+      console.log("true");
+    } else {
+      // setIsButtonDisabled(false);
+      console.log("false");
+    }
+    existingId ? setIsButtonDisabled(true) : setIsButtonDisabled(false);
+  }
 
   const action = (
     <>
@@ -106,6 +137,14 @@ const WorkerCard = () => {
         console.log(err);
       });
   }
+
+  useEffect(() => {
+    getWorkers();
+  }, []);
+
+  useEffect(() => {
+    handleExistingId();
+  }, [workersData]);
 
   return (
     <div className="create container">
@@ -216,7 +255,13 @@ const WorkerCard = () => {
         </FormControl>
       </div>
 
-      <button onClick={handleAddWorker}>Додати</button>
+      <button
+        onClick={handleAddWorker}
+        disabled={isButtonDisabled}
+        style={{ cursor: isButtonDisabled ? "not-allowed" : "pointer" }}
+      >
+        Додати
+      </button>
       <div>
         <Snackbar
           open={open}
