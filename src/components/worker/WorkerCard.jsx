@@ -7,6 +7,7 @@ import {
   doc,
   setDoc,
   deleteField,
+  updateDoc,
   collection,
   addDoc,
   getDocs,
@@ -43,9 +44,10 @@ const cities = ["Миколаїв", "Київ", "Одеса"];
 const type = ["Дистанційно", "В офісі", "Фріланс"];
 
 const WorkerCard = () => {
+  const [ID, setID] = useState();
   const [name, setName] = useState();
   const [description, setDescription] = useState();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isIdExists, setIsIdExists] = useState(false);
   const [distance, setDistance] = useState();
   const [cityName, setCityName] = useState();
   const [typeName, setTypeName] = useState([]);
@@ -94,16 +96,30 @@ const WorkerCard = () => {
     });
   }
 
-  console.log(existingId);
+  const getFields = (updId, updName) => {
+    console.log(updName);
+    console.log(updId);
+    setID(updId);
+    setName(updName);
+    console.log(name);
+  };
+
+  const user = workersData.find((data) => data.UserId === currentUser.uid);
+  console.log(user.id);
+  const handleUpdateWorker = () => {
+    console.log(ID);
+    let fieldsToEdit = doc(dbRef, ID);
+    updateDoc(fieldsToEdit, {
+      Name: name,
+    })
+      .then(() => {
+        alert("Updated");
+      })
+      .catch((err) => console.log(err));
+  };
+
   function handleExistingId() {
-    if (existingId) {
-      // setIsButtonDisabled(true);
-      console.log("true");
-    } else {
-      // setIsButtonDisabled(false);
-      console.log("false");
-    }
-    existingId ? setIsButtonDisabled(true) : setIsButtonDisabled(false);
+    existingId ? setIsIdExists(true) : setIsIdExists(false);
   }
 
   const action = (
@@ -255,13 +271,17 @@ const WorkerCard = () => {
         </FormControl>
       </div>
 
-      <button
-        onClick={handleAddWorker}
-        disabled={isButtonDisabled}
-        style={{ cursor: isButtonDisabled ? "not-allowed" : "pointer" }}
-      >
-        Додати
+      <button onClick={isIdExists ? handleUpdateWorker : handleAddWorker}>
+        {isIdExists ? "Редагувати" : "Додати"}
       </button>
+      {/* {workersData.map((worker) => {
+        return (
+          <button onClick={() => getFields(worker.id, worker.Name)}>get</button>
+        );
+      })} */}
+
+      <button onClick={() => getFields(user.id, user.Name)}>get</button>
+
       <div>
         <Snackbar
           open={open}
