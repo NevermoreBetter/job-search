@@ -1,7 +1,7 @@
 "use client";
 
 import { nanoid } from "nanoid";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
   doc,
@@ -48,17 +48,38 @@ const WorkerCard = () => {
   const [name, setName] = useState();
   const [description, setDescription] = useState();
   const [isIdExists, setIsIdExists] = useState(false);
-  const [distance, setDistance] = useState();
   const [cityName, setCityName] = useState();
   const [typeName, setTypeName] = useState([]);
   const [salary, setSalary] = useState([100, 1000]);
   const [experience, setExperience] = useState();
   const [open, setOpen] = useState(false);
-  const { currentUser } = useAuth();
   const [workersData, setWorkersData] = useState([]);
+  const { currentUser } = useAuth();
   const userName = currentUser.displayName;
   const dbRef = collection(db, "workers");
-  const existingId = workersData.some((data) => data.UserId == currentUser.uid);
+  const existingId = useMemo(() =>
+    workersData.some((data) => data.UserId == currentUser.uid)
+  );
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   const handleAddCity = (event, value) => {
     setCityName(value);
@@ -79,83 +100,119 @@ const WorkerCard = () => {
     setOpen(true);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
+  // async function getWorkers() {
+  //   await getDocs(dbRef).then((response) => {
+  //     setWorkersData(
+  //       response.docs.map((data) => {
+  //         return { ...data.data(), id: data.id };
+  //       })
+  //     );
+  //   });
+  // }
 
   async function getWorkers() {
-    await getDocs(dbRef).then((response) => {
-      setWorkersData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
+    try {
+      const response = await getDocs(dbRef);
+      const data = response.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setWorkersData(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  const getFields = (updId, updName, updDescription, updType) => {
-    console.log(updType);
-
+  const getFields = (
+    updId,
+    updName,
+    updDescription,
+    updType,
+    updExperience,
+    updCity,
+    updSalary
+  ) => {
     setID(updId);
     setName(updName);
     setDescription(updDescription);
     setTypeName(updType);
-  };
-
-  const user = workersData.find((data) => data.UserId === currentUser.uid);
-
-  const handleUpdateWorker = () => {
-    console.log(ID);
-    let fieldsToEdit = doc(dbRef, ID);
-    updateDoc(fieldsToEdit, {
-      Name: name,
-      Description: description,
-      Type: typeName,
-    })
-      .then(() => {
-        alert("Updated");
-      })
-      .catch((err) => console.log(err));
+    setExperience(updExperience);
+    setCityName(updCity);
+    setSalary(updSalary);
   };
 
   function handleExistingId() {
     existingId ? setIsIdExists(true) : setIsIdExists(false);
   }
 
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
+  // async function handleAddWorker() {
+  //   addDoc(dbRef, {
+  //     Name: name,
+  //     Author: userName,
+  //     Description: description,
+  //     Type: typeName,
+  //     City: cityName,
+  //     Salary: salary,
+  //     Experience: experience,
+  //     UserId: currentUser.uid,
+  //     Date: new Date(),
+  //   })
+  //     .then(() => {
+  //       handleClick();
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 
   async function handleAddWorker() {
-    addDoc(dbRef, {
-      Name: name,
-      Author: userName,
-      Description: description,
-      Type: typeName,
-      City: cityName,
-      Salary: salary,
-      Experience: experience,
-      UserId: currentUser.uid,
-      Date: new Date(),
-    })
-      .then(() => {
-        handleClick();
-      })
-      .catch((err) => {
-        console.log(err);
+    try {
+      await addDoc(dbRef, {
+        Name: name,
+        Author: userName,
+        Description: description,
+        Type: typeName,
+        City: cityName,
+        Salary: salary,
+        Experience: experience,
+        UserId: currentUser.uid,
+        Date: new Date(),
       });
+      handleClick();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // async function handleUpdateWorker() {
+  //   console.log(ID);
+  //   let fieldsToEdit = doc(dbRef, ID);
+  //   updateDoc(fieldsToEdit, {
+  //     Name: name,
+  //     Description: description,
+  //     Type: typeName,
+  //     Experience: experience,
+  //     City: cityName,
+  //     Salary: salary,
+  //   })
+  //     .then(() => {
+  //       alert("Updated");
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+
+  async function handleUpdateWorker() {
+    try {
+      const fieldsToEdit = doc(dbRef, ID);
+      await updateDoc(fieldsToEdit, {
+        Name: name,
+        Description: description,
+        Type: typeName,
+        Experience: experience,
+        City: cityName,
+        Salary: salary,
+      });
+      alert("Updated");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -164,6 +221,18 @@ const WorkerCard = () => {
 
   useEffect(() => {
     handleExistingId();
+    const user = workersData.find((data) => data.UserId === currentUser.uid);
+    if (user) {
+      getFields(
+        user.id,
+        user.Name,
+        user.Description,
+        user.Type,
+        user.Experience,
+        user.City,
+        user.Salary
+      );
+    }
   }, [workersData]);
 
   return (
@@ -261,16 +330,19 @@ const WorkerCard = () => {
         <FormControl>
           <Select
             className="min-w-[7rem]"
-            value={distance}
-            onChange={(e) => setExperience(e.target.value)}
+            value={experience}
+            onChange={(e) => {
+              setExperience(e.target.value);
+              console.log(experience);
+            }}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="No experience">Без досвіду</MenuItem>
-            <MenuItem value="1 year">1 рік</MenuItem>
-            <MenuItem value="2 years">2 роки</MenuItem>
-            <MenuItem value="3 years">3 роки</MenuItem>
-            <MenuItem value="5 years">5 років</MenuItem>
+            <MenuItem value="Без досвіду">Без досвіду</MenuItem>
+            <MenuItem value="1 рік">1 рік</MenuItem>
+            <MenuItem value="2 роки">2 роки</MenuItem>
+            <MenuItem value="3 роки">3 роки</MenuItem>
+            <MenuItem value="5 років">5 років</MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -284,14 +356,6 @@ const WorkerCard = () => {
           <button onClick={() => getFields(worker.id, worker.Name)}>get</button>
         );
       })} */}
-
-      <button
-        onClick={() =>
-          getFields(user.id, user.Name, user.Description, user.Type)
-        }
-      >
-        get
-      </button>
 
       <div>
         <Snackbar
