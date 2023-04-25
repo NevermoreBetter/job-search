@@ -100,6 +100,12 @@ const WorkerCard = () => {
     setOpen(true);
   };
 
+  const dataToShow = workersData.filter((data) => {
+    if (data.UserId === currentUser.uid) return data;
+  });
+
+  console.log(dataToShow);
+
   // async function getWorkers() {
   //   await getDocs(dbRef).then((response) => {
   //     setWorkersData(
@@ -209,7 +215,7 @@ const WorkerCard = () => {
         City: cityName,
         Salary: salary,
       });
-      alert("Updated");
+      handleClick();
     } catch (error) {
       console.log(error);
     }
@@ -217,7 +223,7 @@ const WorkerCard = () => {
 
   useEffect(() => {
     getWorkers();
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     handleExistingId();
@@ -236,135 +242,164 @@ const WorkerCard = () => {
   }, [workersData]);
 
   return (
-    <div className="create container">
+    <div className="create container ">
       <Navbar />
-      <div className="mb-4">
-        <label htmlFor="workerName" className="mr-4">
-          Посада
-        </label>
-        <input
-          className="rounded-md border border-black outline-none p-2"
-          id="workerName"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="workerDescription" className="mr-4 ">
-          Досягнення
-        </label>
-        <input
-          className="rounded-md border border-black outline-none p-2"
-          id="workerDescription"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </div>
-      <div className="mb-4 items-center flex">
-        <label htmlFor="workerType" className="mr-4 ">
-          Тип зайнятості
-        </label>
+      <div className={isIdExists ? "flex" : "block"}>
+        <div className={isIdExists ? "w-[45%]" : "w-[100%]"}>
+          <div className="mb-4 ">
+            <label htmlFor="workerName" className="mr-4">
+              Посада
+            </label>
+            <input
+              className="rounded-md border border-black outline-none p-2 "
+              id="workerName"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="mb-4 ">
+            <label htmlFor="workerDescription" className="mr-4">
+              Досягнення
+            </label>
+            <input
+              className="rounded-md border border-black outline-none p-2 "
+              id="workerDescription"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          <div className="mb-4 items-center ">
+            <label htmlFor="workerType" className="mr-4 ">
+              Тип зайнятості
+            </label>
 
-        <FormControl>
-          <InputLabel id="demo-simple-select-helper-label">Тип</InputLabel>
-          <Select
-            className="min-w-[10rem]"
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple
-            value={typeName}
-            onChange={handleAddType}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected) => (
-              <Box>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
+            <FormControl>
+              <InputLabel id="demo-simple-select-helper-label">Тип</InputLabel>
+              <Select
+                className="min-w-[10rem]"
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple
+                value={typeName}
+                onChange={handleAddType}
+                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                renderValue={(selected) => (
+                  <Box>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {type.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
                 ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {type.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
-      <div className="mb-4 flex items-center">
-        <label htmlFor="workerCity" className="mr-4 ">
-          Місто
-        </label>
-        <div>
-          <Autocomplete
-            className="min-w-[7rem]"
-            multiple
-            id="tags-standard"
-            options={cities}
-            onChange={handleAddCity}
-            renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Місто" />
-            )}
-          />
-        </div>
-      </div>
-      <div>
-        <label htmlFor="workerSalary">Очікувана зарплата</label>
-        <div id="workerSalary">
-          <Slider
-            getAriaLabel={() => "Salary range"}
-            value={salary}
-            max={10000}
-            step={100}
-            onChange={handleAddSalary}
-            valueLabelDisplay="auto"
-          />
-        </div>
-      </div>
-      <div className="mb-4 flex items-center">
-        <label htmlFor="workerExperience" className="mr-4 ">
-          Досвід роботи
-        </label>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="mb-4 flex items-center">
+            <label htmlFor="workerCity" className="mr-4 ">
+              Місто
+            </label>
+            <div>
+              <Autocomplete
+                className="min-w-[10rem]"
+                multiple
+                id="tags-standard"
+                options={cities}
+                onChange={handleAddCity}
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" label="Місто" />
+                )}
+              />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="workerSalary">Очікувана зарплата</label>
+            <div id="workerSalary">
+              <Slider
+                getAriaLabel={() => "Salary range"}
+                value={salary}
+                max={10000}
+                step={100}
+                onChange={handleAddSalary}
+                valueLabelDisplay="auto"
+              />
+            </div>
+          </div>
+          <div className="mb-4 flex items-center">
+            <label htmlFor="workerExperience" className="mr-4 ">
+              Досвід роботи
+            </label>
 
-        <FormControl>
-          <Select
-            className="min-w-[7rem]"
-            value={experience}
-            onChange={(e) => {
-              setExperience(e.target.value);
-              console.log(experience);
-            }}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
-          >
-            <MenuItem value="Без досвіду">Без досвіду</MenuItem>
-            <MenuItem value="1 рік">1 рік</MenuItem>
-            <MenuItem value="2 роки">2 роки</MenuItem>
-            <MenuItem value="3 роки">3 роки</MenuItem>
-            <MenuItem value="5 років">5 років</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
+            <FormControl>
+              <Select
+                className="min-w-[7rem]"
+                value={experience}
+                onChange={(e) => {
+                  setExperience(e.target.value);
+                  console.log(experience);
+                }}
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+              >
+                <MenuItem value="Без досвіду">Без досвіду</MenuItem>
+                <MenuItem value="1 рік">1 рік</MenuItem>
+                <MenuItem value="2 роки">2 роки</MenuItem>
+                <MenuItem value="3 роки">3 роки</MenuItem>
+                <MenuItem value="5 років">5 років</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
 
-      <button onClick={isIdExists ? handleUpdateWorker : handleAddWorker}>
-        {isIdExists ? "Редагувати" : "Додати"}
-      </button>
+          <button onClick={isIdExists ? handleUpdateWorker : handleAddWorker}>
+            {isIdExists ? "Редагувати" : "Додати"}
+          </button>
 
-      {/* {workersData.map((worker) => {
+          {/* {workersData.map((worker) => {
         return (
           <button onClick={() => getFields(worker.id, worker.Name)}>get</button>
         );
       })} */}
 
-      <div>
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          message="Заяву створено"
-          action={action}
-        />
+          <div>
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+              message="Заяву створено"
+              action={action}
+            />
+          </div>
+        </div>
+        {isIdExists ? (
+          <div className="w-[45%]">
+            <h2> Так виглядає ваше резюме:</h2>
+            {dataToShow.map((data) => {
+              return (
+                <div className="mb-8">
+                  {data.Name}
+                  {data.Salary.map((salary) => {
+                    return `${salary}$`;
+                  }).join("-")}
+                  <br />
+                  {data.Author}
+                  <br />
+                  {data.City.join(", ")}
+                  <br />
+                  {data.Experience}
+                  <br />
+                  {data.Type}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <Footer />
     </div>
