@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 import {
   doc,
   setDoc,
@@ -20,6 +21,7 @@ const WorkerPosts = () => {
   const { currentUser } = useAuth();
   //---------------------========================TODO: Пагинация здесь========================================---------------------------
 
+  console.log(currentUser);
   const dataToShow = workersData
     .filter((data) => {
       if (cityFilter === "all") return true;
@@ -45,9 +47,9 @@ const WorkerPosts = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="flex gap-8 mb-8">
-        <div className="flex gap-2">
+    <div className="flex justify-start ">
+      <div className="flex flex-col justify-start pt-8 gap-8 mr-[15%]">
+        <div className="flex  gap-2">
           <h3>City:</h3>
           <select onChange={(e) => setCityFilter(e.target.value)}>
             <option value="all">All</option>
@@ -66,28 +68,41 @@ const WorkerPosts = () => {
           </select>
         </div>
       </div>
-      <div>
-        <h2 className="mb-4">
-          There {dataToShow.length <= 1 ? "is" : "are"} {dataToShow.length}{" "}
-          {dataToShow.length <= 1 ? "resume" : "resumes"}
-        </h2>
+      <div className="max-w-[60%] ">
+        <h2 className="mb-4">Відображаються {dataToShow.length} резюме:</h2>
         {dataToShow.map((data) => {
           return (
-            <div className="mb-8">
-              <Link href={`/worker/${data.id}`}>{data.Name}</Link>
+            <div className="mb-8 shadow-xl p-2 rounded-md border-8">
+              <Link href={`/worker/${data.id}`}>
+                <h2 className="text-teal-500 break-words mb-2">{data.Name}</h2>
+              </Link>
               {data.Salary.map((salary) => {
                 return `${salary}$`;
               }).join("-")}
               <br />
-              {data.Author}
+              <div className="flex gap-4 text-sm">
+                <div> {data.Experience}</div>
+                <div>{data.Type.join(", ")}</div>
+                <div>{data.City.join(", ")}</div>
+              </div>
               <br />
-              {data.City.join(", ")}
+              <div className="break-words">{data.Description}</div>
               <br />
-              {data.Experience}
-              <br />
-              {data.Type}
-              <br />
-              {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
+              <div className="flex gap-2">
+                <Image
+                  className="rounded-full"
+                  src={data.UserPic}
+                  width={50}
+                  height={50}
+                  alt="profile picture"
+                />
+                <br />
+                <div>
+                  {data.Author}
+                  <br />
+                  {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
+                </div>
+              </div>
             </div>
           );
         })}

@@ -1,6 +1,7 @@
 "use client";
 
 import { nanoid } from "nanoid";
+import Image from "next/image";
 import React, { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -179,6 +180,7 @@ const WorkerCard = () => {
         Salary: salary,
         Experience: experience,
         UserId: currentUser.uid,
+        UserPic: currentUser.photoURL,
         Date: new Date(),
       });
       handleClick();
@@ -255,13 +257,15 @@ const WorkerCard = () => {
               id="workerName"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              maxlength="50"
             />
           </div>
           <div className="mb-4 ">
             <label htmlFor="workerDescription" className="mr-4">
-              Досягнення
+              Трохи про себе
             </label>
             <input
+              maxlength="500"
               className="rounded-md border border-black outline-none p-2 "
               id="workerDescription"
               value={description}
@@ -382,9 +386,18 @@ const WorkerCard = () => {
               return (
                 <div className="mb-8">
                   {data.Name}
+                  <br />
                   {data.Salary.map((salary) => {
                     return `${salary}$`;
                   }).join("-")}
+                  <br />
+                  <Image
+                    className="rounded-full"
+                    src={data.UserPic}
+                    width={50}
+                    height={50}
+                    alt="profile picture"
+                  />
                   <br />
                   {data.Author}
                   <br />

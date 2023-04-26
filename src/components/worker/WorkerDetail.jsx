@@ -55,13 +55,11 @@ const WorkerDetail = ({ params }) => {
 
   useEffect(() => {
     getWorkers();
-    getIds();
   }, []);
   return (
     <div className="worker-detail container">
       <Navbar />
       <>
-        {idData}
         {workerDetails.map((data) => {
           return (
             <div className="mb-8">

@@ -80,10 +80,11 @@ const JobCard = () => {
       Name: name,
       Description: description,
       Author: userName,
-      Distance: distance,
+      Type: distance,
       City: cityName,
       Salary: salary,
       Experience: experience,
+      UserPic: currentUser.photoURL,
       Date: new Date(),
     })
       .then(() => {
@@ -136,9 +137,11 @@ const JobCard = () => {
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="Remote">Дистанційно</MenuItem>
-            <MenuItem value="On site">В офісі</MenuItem>
-            <MenuItem value="Candidtae select">На розгляд кандидата</MenuItem>
+            <MenuItem value="Дистанційно">Дистанційно</MenuItem>
+            <MenuItem value="В офісі">В офісі</MenuItem>
+            <MenuItem value="На розгляд кандидата">
+              На розгляд кандидата
+            </MenuItem>
           </Select>
         </FormControl>
       </div>
@@ -187,11 +190,11 @@ const JobCard = () => {
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
           >
-            <MenuItem value="No experience">Без досвіду</MenuItem>
-            <MenuItem value="1 year">1 рік</MenuItem>
-            <MenuItem value="2 years">2 рік</MenuItem>
-            <MenuItem value="3 years">3 рік</MenuItem>
-            <MenuItem value="5 years">5 рік</MenuItem>
+            <MenuItem value="Без досвіду">Без досвіду</MenuItem>
+            <MenuItem value="1 рік">1 рік</MenuItem>
+            <MenuItem value="2 роки">2 роки</MenuItem>
+            <MenuItem value="3 роки">3 роки</MenuItem>
+            <MenuItem value="5 років">5 років</MenuItem>
           </Select>
         </FormControl>
       </div>
