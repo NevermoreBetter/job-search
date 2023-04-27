@@ -116,12 +116,21 @@ const JobCard = () => {
         <label htmlFor="jobDescription" className="mr-4">
           Опис
         </label>
-        <input
+        {/* <input
           className="rounded-md border border-black outline-none p-2"
           id="jobDescription"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-        />
+        /> */}
+
+        <textarea
+          className="rounded-md border border-black outline-none p-2"
+          id="jobDescription"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          cols="30"
+          rows="10"
+        ></textarea>
       </div>
       <div className="mb-4 flex items-center">
         <label htmlFor="jobType" className="mr-4">

@@ -72,7 +72,10 @@ const WorkerPosts = () => {
         <h2 className="mb-4">Відображаються {dataToShow.length} резюме:</h2>
         {dataToShow.map((data) => {
           return (
-            <div className="mb-8 shadow-xl p-2 rounded-md border-8">
+            <div
+              className="mb-8 shadow-xl p-2 rounded-md border-8"
+              key={data.id}
+            >
               <Link href={`/worker/${data.id}`}>
                 <h2 className="text-teal-500 break-words mb-2">{data.Name}</h2>
               </Link>

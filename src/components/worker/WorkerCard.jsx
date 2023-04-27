@@ -384,7 +384,7 @@ const WorkerCard = () => {
             <h2> Так виглядає ваше резюме:</h2>
             {dataToShow.map((data) => {
               return (
-                <div className="mb-8">
+                <div className="mb-8" key={data.id}>
                   {data.Name}
                   <br />
                   {data.Salary.map((salary) => {

@@ -62,11 +62,11 @@ const WorkerDetail = ({ params }) => {
       <>
         {workerDetails.map((data) => {
           return (
-            <div className="mb-8">
+            <div className="mb-8" key={data.id}>
               {data.Author}
               {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
               <br />
-              {data.Name}
+              <h3 className="detail-name">{data.Name}</h3>
               <br />
               {data.Salary.map((salary) => {
                 return `${salary}$`;

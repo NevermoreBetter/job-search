@@ -48,7 +48,10 @@ const JobPosts = () => {
       </div>
       {jobsData.map((data) => {
         return (
-          <div className="mb-8 shadow-xl p-2 rounded-md border-8">
+          <div
+            className="mb-8 shadow-xl p-2 rounded-md border-8 "
+            key={data.id}
+          >
             <Link href={`/jobs/${data.id}`}>
               <h2 className="text-teal-500 break-words mb-2">{data.Name}</h2>
             </Link>
