@@ -47,12 +47,12 @@ const WorkerPosts = () => {
   }, []);
 
   return (
-    <div className="flex justify-start ">
+    <div className="flex justify-start">
       <div className="flex flex-col justify-start pt-8 gap-8 mr-[15%]">
         <div className="flex  gap-2">
           <h3>City:</h3>
           <select onChange={(e) => setCityFilter(e.target.value)}>
-            <option value="all">All</option>
+            <option value="all">Всі</option>
             <option value="Київ">Київ</option>
             <option value="Миколаїв">Миколаїв</option>
             <option value="Одеса">Одеса</option>
@@ -61,19 +61,19 @@ const WorkerPosts = () => {
         <div className="flex gap-2">
           <h3>Type:</h3>
           <select onChange={(e) => setTypeFilter(e.target.value)}>
-            <option value="all">All</option>
-            <option value="On site">On site</option>
-            <option value="Part time">Part time</option>
-            <option value="Remote">Remote</option>
+            <option value="all">Всі</option>
+            <option value="В офісі">В офісі</option>
+            <option value="Фріланс">Фріланс</option>
+            <option value="Дистанційно">Дистанційно</option>
           </select>
         </div>
       </div>
-      <div className="max-w-[60%] ">
+      <div className="max-w-[60%] flex-1">
         <h2 className="mb-4">Відображаються {dataToShow.length} резюме:</h2>
         {dataToShow.map((data) => {
           return (
             <div
-              className="mb-8 shadow-xl p-2 rounded-md border-8"
+              className="mb-8 shadow-xl p-2 rounded-md border-8 w-[100%] "
               key={data.id}
             >
               <Link href={`/worker/${data.id}`}>
