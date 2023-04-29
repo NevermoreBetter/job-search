@@ -47,7 +47,7 @@ const WorkerPosts = () => {
   }, []);
 
   return (
-    <div className="flex justify-start">
+    <div className="flex justify-start mt-[7rem]">
       <div className="flex flex-col justify-start pt-8 gap-8 mr-[15%]">
         <div className="flex  gap-2">
           <h3>City:</h3>

@@ -18,7 +18,6 @@ import Image from "next/image";
 import { MdLocationOn } from "react-icons/md";
 import { GiAchievement } from "react-icons/gi";
 import { HiOfficeBuilding } from "react-icons/hi";
-import { Key } from "@mui/icons-material";
 
 const JobDetail = ({ params }) => {
   const { id } = params;
@@ -69,7 +68,7 @@ const JobDetail = ({ params }) => {
           return (
             <div className="mb-8 flex justify-between" key={data.id}>
               <div className="w-[75%]">
-                <h3 className="detail-name">{data.Name}</h3>
+                <h3 className="detail-name break-words">{data.Name}</h3>
                 <br />
                 <div className="mb-4">
                   {data.Salary.map((salary) => {
