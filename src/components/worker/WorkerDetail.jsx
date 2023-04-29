@@ -66,7 +66,7 @@ const WorkerDetail = ({ params }) => {
       <>
         {workerDetails.map((data) => {
           return (
-            <div className="mb-8 flex justify-between" key={data.id}>
+            <div className="mb-8 flex justify-between mt-[5rem]" key={data.id}>
               <div className="w-[75%]">
                 <h3 className="detail-name break-words">{data.Name}</h3>
                 <br />

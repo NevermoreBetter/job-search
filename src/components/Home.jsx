@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="home container">
       <Navbar />
-      Home
+      <div className="mt-[5rem]">Home</div>
       <Footer />
     </div>
   );

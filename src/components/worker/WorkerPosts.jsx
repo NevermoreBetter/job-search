@@ -42,14 +42,16 @@ const WorkerPosts = () => {
     });
   }
 
+  dataToShow.reverse();
+
   useEffect(() => {
     getWorkers();
   }, []);
 
   return (
-    <div className="flex justify-start mt-[7rem]">
+    <div className="flex justify-start mt-[5rem]">
       <div className="flex flex-col justify-start pt-8 gap-8 mr-[15%]">
-        <div className="flex  gap-2">
+        <div className="flex  gap-2 justify-between">
           <h3>City:</h3>
           <select onChange={(e) => setCityFilter(e.target.value)}>
             <option value="all">Всі</option>
@@ -58,7 +60,7 @@ const WorkerPosts = () => {
             <option value="Одеса">Одеса</option>
           </select>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-between">
           <h3>Type:</h3>
           <select onChange={(e) => setTypeFilter(e.target.value)}>
             <option value="all">Всі</option>

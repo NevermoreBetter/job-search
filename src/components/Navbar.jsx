@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo, useContext } from "react";
 import Link from "next/link";
 import { GrUserWorker } from "react-icons/gr";
+import { AiFillCaretDown } from "react-icons/ai";
 import { auth } from "../firebase/firebase";
 import {
   signInWithPopup,
@@ -11,6 +12,7 @@ import {
   browserSessionPersistence,
   onAuthStateChanged,
 } from "firebase/auth";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
@@ -42,7 +44,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="fixed flex justify-between left-[20%] right-[20%] items-center mb-8 top-0">
+    <div className="fixed flex justify-between right-[20%] left-[20%] border-4 border-t-0 border-emerald-400 rounded-b-lg items-center mb-8 top-0 bg-white py-2 px-4">
       <Link href="/">
         {" "}
         <GrUserWorker />
@@ -56,9 +58,9 @@ const Navbar = () => {
           <div>Add job</div>
         </Link>
       </div>
-      <div className="flex gap-8 ">
+      <div className="">
         {currentUser !== null ? (
-          <div onClick={logout} className="flex flex-col">
+          <div className="flex gap-8 items-center ">
             <Image
               className="rounded-full"
               src={currentUser.photoURL}
@@ -66,9 +68,23 @@ const Navbar = () => {
               height={30}
               alt="profile picture"
             />
+            {currentUser.displayName}
             <div>
-              <p>Мій профіль</p>
-              <p>Вийти</p>
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <AiFillCaretDown />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content>
+                    <DropdownMenu.Item>
+                      <Link href="/worker/create-worker">Профіль</Link>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item onClick={logout}>
+                      Вихід
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
             </div>
           </div>
         ) : (

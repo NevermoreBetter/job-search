@@ -2,7 +2,7 @@
 
 import { nanoid } from "nanoid";
 import Image from "next/image";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
   doc,
@@ -13,6 +13,7 @@ import {
   addDoc,
   getDocs,
 } from "firebase/firestore";
+import { updateProfile } from "firebase/auth";
 import { db } from "@/firebase/firebase";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -55,6 +56,7 @@ const WorkerCard = () => {
   const [experience, setExperience] = useState();
   const [open, setOpen] = useState(false);
   const [workersData, setWorkersData] = useState([]);
+  const nameInputRef = useRef();
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
   const dbRef = collection(db, "workers");
@@ -169,6 +171,8 @@ const WorkerCard = () => {
   //     });
   // }
 
+  function updateName(name) {}
+
   async function handleAddWorker() {
     try {
       await addDoc(dbRef, {
@@ -244,9 +248,9 @@ const WorkerCard = () => {
   }, [workersData]);
 
   return (
-    <div className="create container ">
+    <div className="create container">
       <Navbar />
-      <div className={isIdExists ? "flex" : "block"}>
+      <div className={isIdExists ? "flex mt-[5rem]" : "block mt-[5rem]"}>
         <div className={isIdExists ? "w-[45%]" : "w-[100%]"}>
           <div className="mb-4 ">
             <label htmlFor="workerName" className="mr-4">
@@ -362,6 +366,28 @@ const WorkerCard = () => {
           <button onClick={isIdExists ? handleUpdateWorker : handleAddWorker}>
             {isIdExists ? "Редагувати" : "Додати"}
           </button>
+          <form action="">
+            <label htmlFor="workerName" className="mr-4">
+              Name
+            </label>
+            <input
+              className="rounded-md border border-black outline-none p-2 "
+              id="updateName"
+              maxlength="50"
+              ref={nameInputRef}
+            />
+            <input
+              type="submit"
+              value="Submit"
+              onClick={(e) => {
+                e.preventDefault();
+                const name = nameInputRef.current.value;
+                updateProfile(currentUser, {
+                  displayName: name,
+                });
+              }}
+            />
+          </form>
 
           {/* {workersData.map((worker) => {
         return (

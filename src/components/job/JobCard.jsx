@@ -101,7 +101,7 @@ const JobCard = () => {
   return (
     <div className="create container">
       <Navbar />
-      <div className="mb-4">
+      <div className="mb-4 mt-[5rem]">
         <label htmlFor="jobName" className="mr-4">
           Посада
         </label>

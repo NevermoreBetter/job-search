@@ -7,8 +7,9 @@
     width: 60% !important;
     margin: 0 auto;
   }
-  button {
-    background-color: #1565c0 !important;
+
+  select {
+    flex: 0 1 135px;
   }
 
   .detail-name {
@@ -19,4 +20,5 @@
 body {
   padding-top: 1rem;
   font-size: 20px;
+  height: 100%;
 }

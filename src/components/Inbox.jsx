@@ -38,11 +38,11 @@ const Inbox = () => {
   });
   console.log(messageToShow);
   return (
-    <div className="inbox container">
+    <div className="inbox container ">
       <Navbar />
       {messageToShow.map((message) => {
         return (
-          <>
+          <div className="mt-[5rem]">
             <div className="flex gap-2">
               <h3>Від: </h3>
               {message.SenderName}
@@ -53,7 +53,7 @@ const Inbox = () => {
               <h3>Повідомлення: </h3>
               {message.Message}
             </div>
-          </>
+          </div>
         );
       })}
       <Footer />

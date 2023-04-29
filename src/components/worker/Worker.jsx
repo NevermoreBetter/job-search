@@ -30,7 +30,7 @@ const Worker = () => {
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
   return (
-    <div className="jobs container">
+    <div className="jobs container relative">
       <Navbar />
       <WorkerPosts />
       {/* <Posts posts={currentPosts} loading={loading} />
