@@ -68,7 +68,7 @@ const Navbar = () => {
               height={30}
               alt="profile picture"
             />
-            {currentUser.displayName}
+            <Link href="/worker/create-worker">{currentUser.displayName}</Link>{" "}
             <div>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
