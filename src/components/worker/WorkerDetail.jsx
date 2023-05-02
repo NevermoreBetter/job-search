@@ -26,6 +26,7 @@ const WorkerDetail = ({ params }) => {
   const dbRef = collection(db, "workers");
   const messageDbRef = collection(db, "messages");
   const workerDetails = workersData.filter((worker) => worker.id == id);
+  const postId = workerDetails.map((worker) => worker.UserId);
   const [workerId, setWorkerId] = useState("");
   const [message, setMessage] = useState("");
   const { currentUser } = useAuth();
@@ -47,6 +48,7 @@ const WorkerDetail = ({ params }) => {
         console.log(err);
       });
   }
+
   async function getWorkers() {
     await getDocs(dbRef).then((response) => {
       setWorkersData(
@@ -115,18 +117,22 @@ const WorkerDetail = ({ params }) => {
             </div>
           );
         })}
-        <form onSubmit={handleAddMessage}>
-          <br />
-          <label>
-            Message:
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="submit">Send</button>
-        </form>
+        {currentUser.uid !== postId[0] ? (
+          <form onSubmit={handleAddMessage}>
+            <br />
+            <label>
+              Message:
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            </label>
+            <br />
+            <button type="submit">Send</button>
+          </form>
+        ) : (
+          ""
+        )}
       </>
     </div>
   );
