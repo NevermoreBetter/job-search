@@ -1,5 +1,6 @@
 "use client";
 
+import useAccount from "@/hooks/useAccount";
 import React, { useState, useEffect, useRef, useMemo, useContext } from "react";
 import Link from "next/link";
 import { GrUserWorker } from "react-icons/gr";
@@ -36,7 +37,9 @@ const Navbar = () => {
   //   if (data !== null) setLoggedIn(data);
   // }, []);
   const { login, currentUser, logout } = useAuth();
+  const acc = useAccount((state) => state.isWorker);
 
+  console.log(acc);
   async function loginHandler() {
     try {
       await login();
