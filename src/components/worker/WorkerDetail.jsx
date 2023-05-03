@@ -1,4 +1,5 @@
 "use client";
+import useAccount from "@/hooks/useAccount";
 import WorkerCard from "@/components/job/JobCard";
 import { AuthProvider } from "@/context/AuthContext";
 import React, { useEffect, useState } from "react";
@@ -58,7 +59,8 @@ const WorkerDetail = ({ params }) => {
       );
     });
   }
-
+  const acc = useAccount((state) => state.isWorker);
+  console.log(acc);
   useEffect(() => {
     getWorkers();
   }, []);
@@ -117,7 +119,7 @@ const WorkerDetail = ({ params }) => {
             </div>
           );
         })}
-        {currentUser.uid !== postId[0] ? (
+        {currentUser.uid !== postId[0] && !acc ? (
           <form onSubmit={handleAddMessage}>
             <br />
             <label>

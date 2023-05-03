@@ -38,8 +38,8 @@ const Navbar = () => {
   // }, []);
   const { login, currentUser, logout } = useAuth();
   const acc = useAccount((state) => state.isWorker);
+  const changeAcc = useAccount((state) => state.changeAccount);
 
-  console.log(acc);
   async function loginHandler() {
     try {
       await login();
@@ -54,12 +54,9 @@ const Navbar = () => {
       </Link>
       <div className="flex gap-12 h-fit">
         <Link href="/inbox">Inbox</Link>
-        <Link href="/worker">Workers</Link>
-        <Link href="/worker/create-worker">Add worker</Link>
-        <Link href="/jobs">Jobs</Link>
-        <Link href="/jobs/create-job">
-          <div>Add job</div>
-        </Link>
+        <Link href="/worker">Резюме</Link>
+
+        <Link href="/jobs">Вакансії</Link>
       </div>
       <div className="">
         {currentUser !== null ? (
@@ -71,7 +68,13 @@ const Navbar = () => {
               height={30}
               alt="profile picture"
             />
-            <Link href="/worker/create-worker">{currentUser.displayName}</Link>{" "}
+            {acc ? (
+              <Link href="/worker/create-worker">
+                {currentUser.displayName}
+              </Link>
+            ) : (
+              <Link href="/jobs/create-job">{currentUser.displayName}</Link>
+            )}
             <div>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
@@ -80,7 +83,14 @@ const Navbar = () => {
                 <DropdownMenu.Portal>
                   <DropdownMenu.Content>
                     <DropdownMenu.Item>
-                      <Link href="/worker/create-worker">Профіль</Link>
+                      {acc ? (
+                        <Link href="/worker/create-worker">Профіль</Link>
+                      ) : (
+                        <Link href="/jobs/create-job">Профіль</Link>
+                      )}
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item>
+                      <div onClick={changeAcc}>Chage</div>
                     </DropdownMenu.Item>
                     <DropdownMenu.Item onClick={logout}>
                       Вихід
