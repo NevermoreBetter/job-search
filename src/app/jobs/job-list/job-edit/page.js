@@ -1,13 +1,13 @@
-import JobList from "@/components/job/JobList";
+import JobEdit from "@/components/job/JobEdit";
 import React from "react";
 import { AuthProvider } from "@/context/AuthContext";
 
-const JobListPage = () => {
+const JobEditPage = () => {
   return (
     <AuthProvider>
-      <JobList />
+      <JobEdit />
     </AuthProvider>
   );
 };
 
-export default JobListPage;
+export default JobEditPage;
