@@ -86,6 +86,7 @@ const JobCard = () => {
       Experience: experience,
       UserPic: currentUser.photoURL,
       Date: new Date(),
+      UserId: currentUser.uid,
     })
       .then(() => {
         handleClick();

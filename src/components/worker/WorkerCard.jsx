@@ -349,7 +349,6 @@ const WorkerCard = () => {
                 value={experience}
                 onChange={(e) => {
                   setExperience(e.target.value);
-                  console.log(experience);
                 }}
                 displayEmpty
                 inputProps={{ "aria-label": "Without label" }}
@@ -388,13 +387,6 @@ const WorkerCard = () => {
               }}
             />
           </form>
-
-          {/* {workersData.map((worker) => {
-        return (
-          <button onClick={() => getFields(worker.id, worker.Name)}>get</button>
-        );
-      })} */}
-
           <div>
             <Snackbar
               open={open}

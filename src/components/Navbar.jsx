@@ -73,7 +73,7 @@ const Navbar = () => {
                 {currentUser.displayName}
               </Link>
             ) : (
-              <Link href="/jobs/create-job">{currentUser.displayName}</Link>
+              <Link href="/jobs/job-list">{currentUser.displayName}</Link>
             )}
             <div>
               <DropdownMenu.Root>
