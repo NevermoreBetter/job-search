@@ -1,7 +1,7 @@
 import React from "react";
 
 const JobEdit = () => {
-  async function handleUpdateWorker() {
+  async function handleUpdateJob() {
     try {
       const fieldsToEdit = doc(dbRef, ID);
       await updateDoc(fieldsToEdit, {

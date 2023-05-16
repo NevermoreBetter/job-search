@@ -11,34 +11,44 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import Link from "next/link";
+import useGetJobs from "@/hooks/fetchJobs";
 
 const JobPosts = () => {
-  const [jobsData, setJobsData] = useState([]);
+  // const [jobsData, setJobsData] = useState([]);
+  // const dbRef = collection(db, "jobs");
+  // In your component:
   const [readMore, setReadMore] = useState(false);
-  const dbRef = collection(db, "jobs");
+  const { jobsData, isLoading } = useGetJobs();
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   //---------------------========================TODO: Пагинация здесь========================================---------------------------
   const toggleBtn = () => {
     setReadMore((prevState) => !prevState);
   };
 
-  async function getJobs() {
-    await getDocs(dbRef).then((response) => {
-      setJobsData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-      console.log(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
-  }
+  console.log(jobsData);
 
-  useEffect(() => {
-    getJobs();
-  }, []);
+  // async function getJobs() {
+  //   await getDocs(dbRef).then((response) => {
+  //     setJobsData(
+  //       response.docs.map((data) => {
+  //         return { ...data.data(), id: data.id };
+  //       })
+  //     );
+  //     console.log(
+  //       response.docs.map((data) => {
+  //         return { ...data.data(), id: data.id };
+  //       })
+  //     );
+  //   });
+  // }
+
+  // useEffect(() => {
+  //   getJobs();
+  // }, []);
 
   return (
     <div className="container mt-[5rem]">

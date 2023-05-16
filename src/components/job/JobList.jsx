@@ -17,34 +17,38 @@ import { db } from "@/firebase/firebase";
 import Link from "next/link";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
+import useGetJobs from "@/hooks/fetchJobs";
 
 const JobList = () => {
   const { currentUser } = useAuth();
-  const [jobsData, setJobsData] = useState([]);
+  // const [jobsData, setJobsData] = useState([]);
   const userName = currentUser.displayName;
-  const dbRef = collection(db, "jobs");
+  // const dbRef = collection(db, "jobs");
+  const { jobsData, isLoading } = useGetJobs();
 
-  async function getJobs() {
-    try {
-      const response = await getDocs(dbRef);
-      const data = response.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setJobsData(data);
-    } catch (error) {
-      console.log(error);
-    }
+  if (isLoading) {
+    return <p>Loading...</p>;
   }
+
+  // async function getJobs() {
+  //   try {
+  //     const response = await getDocs(dbRef);
+  //     const data = response.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }));
+  //     setJobsData(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
   const dataToShow = jobsData.filter((data) => {
     if (data.UserId === currentUser.uid) return data;
   });
 
-  console.log(dataToShow);
-
-  useEffect(() => {
-    getJobs();
-  }, []);
+  // useEffect(() => {
+  //   getJobs();
+  // }, []);
 
   return (
     <div>

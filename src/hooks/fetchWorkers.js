@@ -1,35 +1,32 @@
-import { doc, getDoc } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useState, useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 
-export default function useFetchWorkers() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [workers, setWorkers] = useState(null);
+function useGetWorkers() {
+  const [workersData, setWorkersData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { currentUser } = useAuth();
+  async function fetchWorkers() {
+    const dbRef = collection(db, "workers");
+    try {
+      const response = await getDocs(dbRef);
+      const data = response.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setWorkersData(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchWorkersData() {
-      try {
-        const docRef = doc(db, "workers", currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setWorkers(docSnap.data());
-          console.log(docSnap.data());
-        } else {
-          setWorkers({});
-        }
-      } catch (error) {
-        setError("failed to fetch workers");
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchWorkersData();
+    fetchWorkers();
   }, []);
 
-  return { loading, error, workers, setWorkers };
+  return { workersData, isLoading };
 }
+
+export default useGetWorkers;

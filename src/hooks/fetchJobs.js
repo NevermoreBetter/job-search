@@ -1,35 +1,32 @@
-import { doc, getDoc } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useState, useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 
-export default function useFetchJobs() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [jobs, setJobs] = useState(null);
+function useGetJobs() {
+  const [jobsData, setJobsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { currentUser } = useAuth();
+  async function fetchJobs() {
+    const dbRef = collection(db, "jobs");
+    try {
+      const response = await getDocs(dbRef);
+      const data = response.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setJobsData(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchJobsData() {
-      try {
-        const docRef = doc(db, "jobs", currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setJobs(docSnap.data());
-          console.log(docSnap.data());
-        } else {
-          setJobs({});
-        }
-      } catch (error) {
-        setError("failed to fetch jobs");
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchJobsData();
+    fetchJobs();
   }, []);
 
-  return { loading, error, jobs, setJobs };
+  return { jobsData, isLoading };
 }
+
+export default useGetJobs;
