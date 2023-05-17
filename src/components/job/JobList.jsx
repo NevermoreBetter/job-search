@@ -62,6 +62,7 @@ const JobList = () => {
             </Link>
             <br />
             {data.Description}
+            <Link href={`/jobs/job-list/${data.id}`}>redact</Link>
           </div>
         );
       })}

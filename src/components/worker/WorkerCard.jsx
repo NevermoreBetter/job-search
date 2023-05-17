@@ -151,26 +151,6 @@ const WorkerCard = () => {
     existingId ? setIsIdExists(true) : setIsIdExists(false);
   }
 
-  // async function handleAddWorker() {
-  //   addDoc(dbRef, {
-  //     Name: name,
-  //     Author: userName,
-  //     Description: description,
-  //     Type: typeName,
-  //     City: cityName,
-  //     Salary: salary,
-  //     Experience: experience,
-  //     UserId: currentUser.uid,
-  //     Date: new Date(),
-  //   })
-  //     .then(() => {
-  //       handleClick();
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
-
   function updateName(name) {}
 
   async function handleAddWorker() {
@@ -192,23 +172,6 @@ const WorkerCard = () => {
       console.log(error);
     }
   }
-
-  // async function handleUpdateWorker() {
-  //   console.log(ID);
-  //   let fieldsToEdit = doc(dbRef, ID);
-  //   updateDoc(fieldsToEdit, {
-  //     Name: name,
-  //     Description: description,
-  //     Type: typeName,
-  //     Experience: experience,
-  //     City: cityName,
-  //     Salary: salary,
-  //   })
-  //     .then(() => {
-  //       alert("Updated");
-  //     })
-  //     .catch((err) => console.log(err));
-  // }
 
   async function handleUpdateWorker() {
     try {

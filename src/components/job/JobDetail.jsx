@@ -29,7 +29,7 @@ const JobDetail = ({ params }) => {
   const [jobId, setJobId] = useState("");
   const [message, setMessage] = useState("");
   const { currentUser } = useAuth();
-
+  console.log(params);
   async function handleAddMessage() {
     addDoc(messageDbRef, {
       Message: message,
