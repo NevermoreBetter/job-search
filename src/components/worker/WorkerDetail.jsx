@@ -28,12 +28,12 @@ const WorkerDetail = ({ params }) => {
   const messageDbRef = collection(db, "messages");
   const workerDetails = workersData.filter((worker) => worker.id == id);
   const postId = workerDetails.map((worker) => worker.UserId);
-  const [workerId, setWorkerId] = useState("");
-  const [message, setMessage] = useState("");
+  const [messageData, setMessageData] = useState("");
   const { currentUser } = useAuth();
   const acc = useAccount((state) => state.isWorker);
 
-  async function handleAddMessage() {
+  async function handleAddMessage(e) {
+    e.preventDefault();
     addDoc(messageDbRef, {
       Message: message,
       SenderId: currentUser.uid,
@@ -45,6 +45,7 @@ const WorkerDetail = ({ params }) => {
     })
       .then(() => {
         alert("message sent");
+        setMessageData({ ...messageData, message: message });
       })
       .catch((err) => {
         console.log(err);
@@ -107,7 +108,11 @@ const WorkerDetail = ({ params }) => {
           );
         })}
         {currentUser.uid !== postId[0] && !acc ? (
-          <form onSubmit={handleAddMessage}>
+          <form
+            onSubmit={() => {
+              handleAddMessage;
+            }}
+          >
             <br />
             <label>
               Message:

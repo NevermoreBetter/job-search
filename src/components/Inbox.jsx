@@ -42,7 +42,7 @@ const Inbox = () => {
       <Navbar />
       {messageToShow.map((message) => {
         return (
-          <div className="mt-[5rem]">
+          <div className="mt-[5rem] border-8">
             <div className="flex gap-2">
               <h3>Від: </h3>
               {message.SenderName}

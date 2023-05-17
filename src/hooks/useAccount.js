@@ -1,8 +1,16 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const useAccount = create((set) => ({
-  isWorker: true,
-  changeAccount: () => set((state) => ({ isWorker: !state.isWorker })),
-}));
+const useAccount = create(
+  persist(
+    (set) => ({
+      isWorker: true,
+      changeAccount: () => set((state) => ({ isWorker: !state.isWorker })),
+    }),
+    {
+      name: "account-type",
+    }
+  )
+);
 
 export default useAccount;
