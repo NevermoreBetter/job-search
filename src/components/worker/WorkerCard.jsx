@@ -109,16 +109,6 @@ const WorkerCard = () => {
 
   console.log(dataToShow);
 
-  // async function getWorkers() {
-  //   await getDocs(dbRef).then((response) => {
-  //     setWorkersData(
-  //       response.docs.map((data) => {
-  //         return { ...data.data(), id: data.id };
-  //       })
-  //     );
-  //   });
-  // }
-
   async function getWorkers() {
     try {
       const response = await getDocs(dbRef);

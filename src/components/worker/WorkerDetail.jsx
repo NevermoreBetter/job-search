@@ -19,11 +19,11 @@ import { MdLocationOn } from "react-icons/md";
 import { GiAchievement } from "react-icons/gi";
 import { HiOfficeBuilding } from "react-icons/hi";
 import Image from "next/image";
+import useGetWorkers from "@/hooks/fetchWorkers";
 
 const WorkerDetail = ({ params }) => {
   const { id } = params;
-  const [workersData, setWorkersData] = useState([]);
-
+  const { workersData, isLoading } = useGetWorkers();
   const dbRef = collection(db, "workers");
   const messageDbRef = collection(db, "messages");
   const workerDetails = workersData.filter((worker) => worker.id == id);
@@ -31,6 +31,7 @@ const WorkerDetail = ({ params }) => {
   const [workerId, setWorkerId] = useState("");
   const [message, setMessage] = useState("");
   const { currentUser } = useAuth();
+  const acc = useAccount((state) => state.isWorker);
 
   async function handleAddMessage() {
     addDoc(messageDbRef, {
@@ -50,20 +51,6 @@ const WorkerDetail = ({ params }) => {
       });
   }
 
-  async function getWorkers() {
-    await getDocs(dbRef).then((response) => {
-      setWorkersData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
-  }
-  const acc = useAccount((state) => state.isWorker);
-  console.log(acc);
-  useEffect(() => {
-    getWorkers();
-  }, []);
   return (
     <div className="worker-detail container">
       <Navbar />

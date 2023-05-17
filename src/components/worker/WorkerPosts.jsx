@@ -11,9 +11,10 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import Link from "next/link";
+import useGetWorkers from "@/hooks/fetchWorkers";
 
 const WorkerPosts = () => {
-  const [workersData, setWorkersData] = useState([]);
+  const { workersData, isLoading } = useGetWorkers();
   const [cityFilter, setCityFilter] = useState("all"); // initial city filter value is "all"
   const [typeFilter, setTypeFilter] = useState("all"); // initial type filter value is "all"
   const dbRef = collection(db, "workers");
@@ -21,7 +22,6 @@ const WorkerPosts = () => {
   const { currentUser } = useAuth();
   //---------------------========================TODO: Пагинация здесь========================================---------------------------
 
-  console.log(currentUser);
   const dataToShow = workersData
     .filter((data) => {
       if (cityFilter === "all") return true;
@@ -32,21 +32,7 @@ const WorkerPosts = () => {
       return data.Type.includes(typeFilter);
     });
 
-  async function getWorkers() {
-    await getDocs(dbRef).then((response) => {
-      setWorkersData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
-  }
-
   dataToShow.reverse();
-
-  useEffect(() => {
-    getWorkers();
-  }, []);
 
   return (
     <div className="flex justify-start mt-[5rem]">
