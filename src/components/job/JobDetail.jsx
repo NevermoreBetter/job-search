@@ -1,4 +1,5 @@
 "use client";
+import { nanoid } from "nanoid";
 import jobCard from "@/components/job/JobCard";
 import { AuthProvider } from "@/context/AuthContext";
 import React, { useEffect, useState } from "react";
@@ -18,19 +19,21 @@ import Image from "next/image";
 import { MdLocationOn } from "react-icons/md";
 import { GiAchievement } from "react-icons/gi";
 import { HiOfficeBuilding } from "react-icons/hi";
-
+import { storage } from "@/firebase/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const JobDetail = ({ params }) => {
   const { id } = params;
   const [jobData, setJobData] = useState([]);
-
+  const [fileUpload, setFileUpload] = useState(null);
   const dbRef = collection(db, "jobs");
-  const messageDbRef = collection(db, "messages");
+  const messageDbRef = collection(db, "jobMessages");
   const jobDetails = jobData.filter((job) => job.id == id);
-  const [jobId, setJobId] = useState("");
+  const [resume, setResume] = useState(null);
   const [message, setMessage] = useState("");
   const { currentUser } = useAuth();
-  console.log(params);
+
   async function handleAddMessage() {
+    alert(resume);
     addDoc(messageDbRef, {
       Message: message,
       SenderId: currentUser.uid,
@@ -38,6 +41,7 @@ const JobDetail = ({ params }) => {
       RecieverId: jobDetails.map((data) => {
         return data.UserId;
       }),
+      Resume: resume,
       Date: new Date(),
     })
       .then(() => {
@@ -47,6 +51,31 @@ const JobDetail = ({ params }) => {
         console.log(err);
       });
   }
+
+  useEffect(() => {
+    if (resume !== null) {
+      handleAddMessage();
+    }
+  }, [resume]);
+
+  const uploadFile = async () => {
+    if (fileUpload == null) return;
+    const fileRef = ref(storage, `${fileUpload.name + nanoid()}`);
+    uploadBytes(fileRef, fileUpload)
+      .then(() => {
+        alert("resume sent");
+        return getDownloadURL(fileRef);
+      })
+      .then((fileUrl) => {
+        setResume(fileUrl);
+        alert(resume);
+        alert("file get");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   async function getJobs() {
     await getDocs(dbRef).then((response) => {
       setJobData(
@@ -115,7 +144,12 @@ const JobDetail = ({ params }) => {
             </div>
           );
         })}
-        {/* <form onSubmit={handleAddMessage}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            uploadFile();
+          }}
+        >
           <br />
           <label>
             Message:
@@ -125,8 +159,17 @@ const JobDetail = ({ params }) => {
             />
           </label>
           <br />
+          <label>
+            Upload file:
+            <input
+              type="file"
+              onChange={(e) => {
+                setFileUpload(e.target.files[0]);
+              }}
+            />
+          </label>
           <button type="submit">Send</button>
-        </form> */}
+        </form>
       </>
     </div>
   );

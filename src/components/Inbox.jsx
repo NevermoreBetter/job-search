@@ -11,14 +11,16 @@ import {
   addDoc,
   getDocs,
 } from "firebase/firestore";
+import useAccount from "@/hooks/useAccount";
 import { db } from "@/firebase/firebase";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "../components/Footer";
 const Inbox = () => {
+  const acc = useAccount((state) => state.isWorker);
   const { currentUser } = useAuth();
   const [messages, setMessages] = useState([]);
-  const dbRef = collection(db, "messages");
+  const dbRef = collection(db, acc ? "workerMessages" : "jobMessages");
   async function getMessages() {
     await getDocs(dbRef).then((response) => {
       setMessages(
@@ -29,9 +31,11 @@ const Inbox = () => {
     });
   }
 
+  console.log(messages);
+
   useEffect(() => {
     getMessages();
-  }, []);
+  }, [acc]);
 
   const messageToShow = messages.filter((message) => {
     return message.RecieverId.includes(currentUser.uid);
@@ -52,6 +56,10 @@ const Inbox = () => {
             <div className="flex gap-2">
               <h3>Повідомлення: </h3>
               {message.Message}
+            </div>
+            <br />
+            <div>
+              <a href={message.Resume}>Резюме</a>
             </div>
           </div>
         );

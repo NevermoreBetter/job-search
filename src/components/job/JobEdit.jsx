@@ -125,10 +125,12 @@ const JobEdit = ({ params }) => {
       await updateDoc(fieldsToEdit, {
         Name: name,
         Description: description,
+        Author: userName,
         Type: typeName,
-        Experience: experience,
         City: cityName,
         Salary: salary,
+        Experience: experience,
+        UserId: currentUser.uid,
       });
       handleClick();
     } catch (error) {

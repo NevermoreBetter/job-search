@@ -25,10 +25,11 @@ const WorkerDetail = ({ params }) => {
   const { id } = params;
   const { workersData, isLoading } = useGetWorkers();
   const dbRef = collection(db, "workers");
-  const messageDbRef = collection(db, "messages");
+  const fileUpload = useState(null);
+  const messageDbRef = collection(db, "workerMessages");
   const workerDetails = workersData.filter((worker) => worker.id == id);
   const postId = workerDetails.map((worker) => worker.UserId);
-  const [messageData, setMessageData] = useState("");
+  const [message, setMessage] = useState("");
   const { currentUser } = useAuth();
   const acc = useAccount((state) => state.isWorker);
 
@@ -45,7 +46,6 @@ const WorkerDetail = ({ params }) => {
     })
       .then(() => {
         alert("message sent");
-        setMessageData({ ...messageData, message: message });
       })
       .catch((err) => {
         console.log(err);
@@ -108,11 +108,7 @@ const WorkerDetail = ({ params }) => {
           );
         })}
         {currentUser.uid !== postId[0] && !acc ? (
-          <form
-            onSubmit={() => {
-              handleAddMessage;
-            }}
-          >
+          <form onSubmit={handleAddMessage}>
             <br />
             <label>
               Message:

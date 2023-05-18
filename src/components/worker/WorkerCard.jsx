@@ -221,13 +221,14 @@ const WorkerCard = () => {
             <label htmlFor="workerDescription" className="mr-4">
               Трохи про себе
             </label>
-            <input
-              maxlength="500"
+            <textarea
               className="rounded-md border border-black outline-none p-2 "
               id="workerDescription"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-            />
+              cols="30"
+              rows="10"
+            ></textarea>
           </div>
           <div className="mb-4 items-center ">
             <label htmlFor="workerType" className="mr-4 ">
