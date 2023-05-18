@@ -46,8 +46,6 @@ const Navbar = () => {
     } catch (error) {}
   }
 
-  console.log(acc);
-
   return (
     <div className="fixed flex justify-between right-[20%] left-[20%] border-4 border-t-0 border-emerald-400 rounded-b-lg items-center mb-8 top-0 bg-white py-2 px-4">
       <Link href="/">
