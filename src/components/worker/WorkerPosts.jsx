@@ -17,6 +17,7 @@ const WorkerPosts = () => {
   const { workersData, isLoading } = useGetWorkers();
   const [cityFilter, setCityFilter] = useState("all"); // initial city filter value is "all"
   const [typeFilter, setTypeFilter] = useState("all"); // initial type filter value is "all"
+  const [searchTerm, setSearchTerm] = useState("");
   const dbRef = collection(db, "workers");
   const [idData, setIdData] = useState(0);
   const { currentUser } = useAuth();
@@ -30,6 +31,11 @@ const WorkerPosts = () => {
     .filter((data) => {
       if (typeFilter === "all") return true;
       return data.Type.includes(typeFilter);
+    })
+    .filter((data) => {
+      if (searchTerm === "") return true; // if search term is empty, show all data
+      const regex = new RegExp(searchTerm, "i"); // create case-insensitive regular expression
+      return regex.test(data.Name) || regex.test(data.Description); // check if name or description matches search term
     });
 
   dataToShow.reverse();
@@ -54,6 +60,14 @@ const WorkerPosts = () => {
             <option value="Фріланс">Фріланс</option>
             <option value="Дистанційно">Дистанційно</option>
           </select>
+        </div>
+        <div className="flex gap-2 justify-between">
+          <h3>Search:</h3>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
       <div className="max-w-[60%] flex-1">

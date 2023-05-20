@@ -13,7 +13,6 @@ import {
   addDoc,
   getDocs,
 } from "firebase/firestore";
-import { updateProfile } from "firebase/auth";
 import { db } from "@/firebase/firebase";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
@@ -319,28 +318,6 @@ const WorkerCard = () => {
           <button onClick={isIdExists ? handleUpdateWorker : handleAddWorker}>
             {isIdExists ? "Редагувати" : "Додати"}
           </button>
-          <form action="">
-            <label htmlFor="workerName" className="mr-4">
-              Name
-            </label>
-            <input
-              className="rounded-md border border-black outline-none p-2 "
-              id="updateName"
-              maxlength="50"
-              ref={nameInputRef}
-            />
-            <input
-              type="submit"
-              value="Submit"
-              onClick={(e) => {
-                e.preventDefault();
-                const name = nameInputRef.current.value;
-                updateProfile(currentUser, {
-                  displayName: name,
-                });
-              }}
-            />
-          </form>
           <div>
             <Snackbar
               open={open}

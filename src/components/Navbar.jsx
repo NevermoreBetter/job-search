@@ -49,7 +49,6 @@ const Navbar = () => {
   return (
     <div className="fixed flex justify-between right-[20%] left-[20%] border-4 border-t-0 border-emerald-400 rounded-b-lg items-center mb-8 top-0 bg-white py-2 px-4">
       <Link href="/">
-        {" "}
         <GrUserWorker />
       </Link>
       <div className="flex gap-12 h-fit">
@@ -90,7 +89,10 @@ const Navbar = () => {
                       )}
                     </DropdownMenu.Item>
                     <DropdownMenu.Item>
-                      <div onClick={changeAcc}>Chage</div>
+                      <div onClick={changeAcc}>Змінити</div>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item>
+                      <Link href="/settings">Налаштування</Link>
                     </DropdownMenu.Item>
                     <DropdownMenu.Item onClick={logout}>
                       Вихід
