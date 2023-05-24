@@ -1,5 +1,7 @@
+import Navbar from "@/components/Navbar";
 import "../styles/globals.css";
 import "../styles/normalize.css";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata = {
   title: "Name",
@@ -9,7 +11,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }

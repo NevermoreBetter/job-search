@@ -3,11 +3,11 @@ import { AuthProvider } from "@/context/AuthContext";
 
 const WorkerPage = () => {
   return (
-    <AuthProvider>
-      <div>
-        <Worker />
-      </div>
-    </AuthProvider>
+    // <AuthProvider>
+    <div>
+      <Worker />
+    </div>
+    /* </AuthProvider> */
   );
 };
 

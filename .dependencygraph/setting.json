@@ -1,0 +1,10 @@
+{
+  "alias": {
+    "@": "./src"
+  },
+  "resolveExtensions": [
+    ".js",
+    ".jsx"
+  ],
+  "entryFilePath": "src\\components\\worker\\Worker.jsx"
+}

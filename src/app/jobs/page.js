@@ -4,11 +4,11 @@ import { AuthProvider } from "@/context/AuthContext";
 
 const JobsPage = () => {
   return (
-    <AuthProvider>
-      <div>
-        <Jobs />
-      </div>
-    </AuthProvider>
+    // <AuthProvider>
+    <div>
+      <Jobs />
+    </div>
+    /* </AuthProvider> */
   );
 };
 
