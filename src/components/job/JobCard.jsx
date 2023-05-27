@@ -3,10 +3,9 @@
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
+import useGetCompany from "@/hooks/useFetchCompany";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -16,6 +15,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { data } from "autoprefixer";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -38,9 +38,14 @@ const JobCard = () => {
   const [cityName, setCityName] = useState([]);
   const [salary, setSalary] = useState([100, 1000]);
   const [experience, setExperience] = useState();
+  const { companyData, isLoading } = useGetCompany();
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
   const dbRef = collection(db, "jobs");
+  const company = companyData.find((data) => {
+    if (data.UserId.includes(currentUser.uid)) return true;
+  });
+  const companyName = company ? company.Name : null;
 
   const handleAddCity = (event, value) => {
     setCityName(value);
@@ -84,6 +89,7 @@ const JobCard = () => {
       City: cityName,
       Salary: salary,
       Experience: experience,
+      Company: companyName,
       UserPic: currentUser.photoURL,
       Date: new Date(),
       UserId: currentUser.uid,
@@ -101,7 +107,6 @@ const JobCard = () => {
 
   return (
     <div className="create container">
-      <Navbar />
       <div className="mb-4 mt-[5rem]">
         <label htmlFor="jobName" className="mr-4">
           Посада
@@ -117,13 +122,6 @@ const JobCard = () => {
         <label htmlFor="jobDescription" className="mr-4">
           Опис
         </label>
-        {/* <input
-          className="rounded-md border border-black outline-none p-2"
-          id="jobDescription"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        /> */}
-
         <textarea
           className="rounded-md border border-black outline-none p-2"
           id="jobDescription"
@@ -218,7 +216,6 @@ const JobCard = () => {
           action={action}
         />
       </div>
-      <Footer />
     </div>
   );
 };

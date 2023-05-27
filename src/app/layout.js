@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import "../styles/globals.css";
 import "../styles/normalize.css";
 import { AuthProvider } from "@/context/AuthContext";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Name",
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <Navbar />
           {children}
+          <Footer />
         </AuthProvider>
       </body>
     </html>

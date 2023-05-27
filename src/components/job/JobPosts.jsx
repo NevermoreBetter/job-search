@@ -88,6 +88,9 @@ const JobPosts = () => {
               <br />
               <div>
                 {data.Author}
+                <Link href={`jobs/company/${data.Company}`}>
+                  {data.Company}
+                </Link>
                 <br />
                 {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
               </div>
