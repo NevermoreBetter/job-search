@@ -4,8 +4,23 @@
 
 @layer {
   .container {
-    width: 60% !important;
+    width: 80% !important;
     margin: 0 auto;
+  }
+  .active {
+    color: green !important;
+    position: relative !important;
+  }
+
+  .active::after {
+    content: "" !important;
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    bottom: -10px !important;
+    width: 70% !important;
+    border-bottom: 5px solid green !important;
+    border-radius: 20px;
   }
 
   select {

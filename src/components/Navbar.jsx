@@ -6,36 +6,16 @@ import Link from "next/link";
 import { GrUserWorker } from "react-icons/gr";
 import { AiFillCaretDown } from "react-icons/ai";
 import { auth } from "../firebase/firebase";
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  setPersistence,
-  browserSessionPersistence,
-  onAuthStateChanged,
-} from "firebase/auth";
+
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@mui/material";
 const Navbar = () => {
-  // const [loggedIn, setLoggedIn] = useState(false);
-  // const [currentUser] = useAuthState(auth);
-  // const googleAuth = new GoogleAuthProvider();
-  // console.log(currentUser);
-  // const login = async () => {
-  //   const result = await signInWithPopup(auth, googleAuth);
-  //   setLoggedIn(true);
-  // };
-
-  // useEffect(() => {
-  //   window.localStorage.setItem("login", loggedIn);
-  // }, [loggedIn]);
-
-  // useEffect(() => {
-  //   const data = window.localStorage.getItem("login");
-  //   if (data !== null) setLoggedIn(data);
-  // }, []);
+  const router = useRouter();
+  const pathname = usePathname();
   const { login, currentUser, logout } = useAuth();
   const acc = useAccount((state) => state.isWorker);
   const changeAcc = useAccount((state) => state.changeAccount);
@@ -47,33 +27,53 @@ const Navbar = () => {
   }
 
   return (
-    <div className="fixed flex justify-between right-[20%] left-[20%] border-4 border-t-0 border-emerald-400 rounded-b-lg items-center mb-8 top-0 bg-white py-2 px-4">
+    <div className="fixed flex justify-between right-[10%] left-[10%] items-center mb-8 top-0 bg-white py-2 px-4">
       <Link href="/">
         <GrUserWorker />
       </Link>
       <div className="flex gap-12 h-fit">
-        <Link href="/inbox">Inbox</Link>
-        <Link href="/worker">Резюме</Link>
-        <Link href="/jobs">Вакансії</Link>
+        <Link href="/inbox" className={pathname === "/inbox" ? "active" : ""}>
+          Пропозиції
+        </Link>
+        {acc ? (
+          <Link href="/jobs" className={pathname === "/jobs" ? "active" : ""}>
+            Вакансії
+          </Link>
+        ) : (
+          <Link
+            href="/worker"
+            className={pathname === "/worker" ? "active" : ""}
+          >
+            Резюме
+          </Link>
+        )}
+        {acc ? (
+          <Link
+            href="/worker/create-worker"
+            className={pathname === "/worker/create-worker" ? "active" : ""}
+          >
+            Створити резюме
+          </Link>
+        ) : (
+          <Link
+            href="/jobs/job-list"
+            className={pathname === "/jobs/job-list" ? "active" : ""}
+          >
+            Список ваших вакансій
+          </Link>
+        )}
         {acc ? "робітник" : "роботодавець"}
       </div>
-      <div className="">
+      <div>
         {currentUser !== null ? (
-          <div className="flex gap-8 items-center ">
+          <div class="flex gap-8 items-center ">
             <Image
-              className="rounded-full"
+              class="rounded-full"
               src={currentUser.photoURL}
               width={30}
               height={30}
               alt="profile picture"
             />
-            {acc ? (
-              <Link href="/worker/create-worker">
-                {currentUser.displayName}
-              </Link>
-            ) : (
-              <Link href="/jobs/job-list">{currentUser.displayName}</Link>
-            )}
             <div>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
