@@ -12,6 +12,10 @@ import Image from "next/image";
 // import { db } from "@/firebase/firebase";
 import Link from "next/link";
 import useGetJobs from "@/hooks/fetchJobs";
+import "regenerator-runtime/runtime";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const JobPosts = () => {
   // const [jobsData, setJobsData] = useState([]);
@@ -19,6 +23,17 @@ const JobPosts = () => {
   // In your component:
   const [readMore, setReadMore] = useState(false);
   const { jobsData, isLoading } = useGetJobs();
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    alert("Speech recognition is not supported");
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -53,6 +68,13 @@ const JobPosts = () => {
   return (
     <div className="container mt-[5rem]">
       <div className="mb-4">
+        <div>
+          <p>Microphone: {listening ? "on" : "off"}</p>
+          <button onClick={SpeechRecognition.startListening}>Start</button>
+          <button onClick={SpeechRecognition.stopListening}>Stop</button>
+          <button onClick={resetTranscript}>Reset</button>
+          <p>{transcript}</p>
+        </div>
         There {jobsData.length <= 1 ? "is" : "are"} {jobsData.length}{" "}
         {jobsData.length <= 1 ? "vacation" : "vacations"}
       </div>
