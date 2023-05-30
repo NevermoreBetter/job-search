@@ -1,25 +1,17 @@
+"use client";
 import React, { useEffect, useState } from "react";
-// import { useAuth } from "@/context/AuthContext";
+
 import Image from "next/image";
-// import {
-//   doc,
-//   setDoc,
-//   deleteField,
-//   collection,
-//   addDoc,
-//   getDocs,
-// } from "firebase/firestore";
-// import { db } from "@/firebase/firebase";
-import Link from "next/link";
-import useGetWorkers from "@/hooks/fetchWorkers";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import Link from "next/link";
+import useGetWorkers from "@/hooks/fetchWorkers";
 
 const WorkerPosts = () => {
   const { workersData, isLoading } = useGetWorkers();
-  const [cityFilter, setCityFilter] = useState("all"); // initial city filter value is "all"
-  const [typeFilter, setTypeFilter] = useState("all"); // initial type filter value is "all"
+  const [cityFilter, setCityFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const {
     transcript,
@@ -46,9 +38,9 @@ const WorkerPosts = () => {
       return data.Type.includes(typeFilter);
     })
     .filter((data) => {
-      if (searchTerm === "") return true; // if search term is empty, show all data
-      const regex = new RegExp(searchTerm, "i"); // create case-insensitive regular expression
-      return regex.test(data.Name) || regex.test(data.Description); // check if name or description matches search term
+      if (searchTerm === "") return true;
+      const regex = new RegExp(searchTerm, "i");
+      return regex.test(data.Name) || regex.test(data.Description);
     });
 
   dataToShow.reverse();
@@ -76,7 +68,7 @@ const WorkerPosts = () => {
         </div>
       </div>
       <div className="max-w-[60%] flex-1">
-        <form class="flex items-center " onSubmit={(e) => e.preventDefault()}>
+        {/* <form class="flex items-center ">
           <label for="voice-search" class="sr-only">
             Search
           </label>
@@ -99,20 +91,19 @@ const WorkerPosts = () => {
             <input
               type="text"
               id="voice-search"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search Mockups, Logos, Design Templates..."
+              class="dark:bg-gray-50 border dark:border-gray-300 dark:text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  bg-gray-700 border-gray-600 dark:placeholder-gray-700 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Пошук"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               required
             />
             <button
-              onClick={SpeechRecognition.startListening}
               type="button"
               class="absolute inset-y-0 right-0 flex items-center pr-3"
             >
               <svg
                 aria-hidden="true"
-                class="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                class="w-4 h-4 dark:text-gray-500 text-gray-400 dark:hover:text-gray-900 hover:text-white"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
@@ -125,16 +116,17 @@ const WorkerPosts = () => {
               </svg>
             </button>
           </div>
-        </form>
-        {/* <div className="flex">
-          <h3>Search:</h3>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div> */}
-        <h2 className="mb-4">Відображаються {dataToShow.length} резюме:</h2>
+        </form> */}
+        <div>
+          <p>Microphone: {listening ? "on" : "off"}</p>
+          <button onClick={SpeechRecognition.startListening}>Start</button>
+          <button onClick={SpeechRecognition.stopListening}>Stop</button>
+          <button onClick={resetTranscript}>Reset</button>
+          <p>{transcript}</p>
+        </div>
+        <h2 className="mb-4 mt-3">
+          Відображаються {dataToShow.length} резюме:
+        </h2>
         {dataToShow.map((data) => {
           return (
             <div
