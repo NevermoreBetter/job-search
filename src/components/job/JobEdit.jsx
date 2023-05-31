@@ -89,7 +89,7 @@ const JobEdit = ({ params }) => {
     console.log(data);
   });
 
-  console.log(dataToShow);
+  console.log(name);
 
   async function getJobs() {
     try {
@@ -102,7 +102,6 @@ const JobEdit = ({ params }) => {
   }
 
   const getFields = (
-    // updId,
     updName,
     updDescription,
     updType,
@@ -110,7 +109,6 @@ const JobEdit = ({ params }) => {
     updCity,
     updSalary
   ) => {
-    // setID(updId);
     setName(updName);
     setDescription(updDescription);
     setTypeName(updType);
@@ -143,10 +141,11 @@ const JobEdit = ({ params }) => {
   }, [open]);
 
   useEffect(() => {
-    const user = jobsData.find((data) => data.UserId === currentUser.uid);
+    const user = jobsData.find(
+      (data) => data.UserId === currentUser.uid && data.id === id
+    );
     if (user) {
       getFields(
-        // user.id,
         user.Name,
         user.Description,
         user.Type,
@@ -159,39 +158,40 @@ const JobEdit = ({ params }) => {
 
   return (
     <div className="create container">
-      <Navbar />
       <div className="block mt-[5rem]">
         <div className="w-[100%]">
-          <Navbar />
           <div className="mb-4 mt-[5rem]">
-            <label htmlFor="jobName" className="mr-4">
-              Посада
+            <label
+              for="jobName"
+              class="block mb-2  font-medium dark:text-gray-900 text-white"
+            >
+              Посада:
             </label>
             <input
-              className="rounded-md border border-black outline-none p-2"
+              type="text"
               id="jobName"
+              class="dark:bg-gray-50 border dark:border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Назва посади"
               value={name}
               onChange={(e) => setName(e.target.value)}
-            />
+              required
+            ></input>
           </div>
           <div className="mb-4">
-            <label htmlFor="jobDescription" className="mr-4">
-              Опис
+            <label
+              for="jobDescription"
+              class="block mb-2  font-medium dark:text-gray-900 text-white"
+            >
+              Опис:
             </label>
-            {/* <input
-          className="rounded-md border border-black outline-none p-2"
-          id="jobDescription"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        /> */}
-
             <textarea
-              className="rounded-md border border-black outline-none p-2"
               id="jobDescription"
+              rows="4"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              cols="30"
-              rows="10"
+              class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Опишіть деталі роботи"
+              required
             ></textarea>
           </div>
           <div className="mb-4 flex items-center">
@@ -200,13 +200,14 @@ const JobEdit = ({ params }) => {
             </label>
 
             <FormControl>
+              <InputLabel id="demo-simple-select-label1">Вибір</InputLabel>
               <Select
+                labelId="demo-simple-select-label1"
                 className="min-w-[10rem]"
                 id="jobType"
                 value={typeName}
-                onChange={(e) => setTypeName(e.target.value)}
-                displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
+                label="Вибір"
+                onChange={(e) => setDistance(e.target.value)}
               >
                 <MenuItem value="Дистанційно">Дистанційно</MenuItem>
                 <MenuItem value="В офісі">В офісі</MenuItem>
@@ -269,8 +270,13 @@ const JobEdit = ({ params }) => {
               </Select>
             </FormControl>
           </div>
-
-          <button onClick={handleUpdateJob}>Редагувати</button>
+          <button
+            type="button"
+            onClick={handleUpdateJob}
+            class="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          >
+            Редагувати
+          </button>
           <div>
             <Snackbar
               open={open}
@@ -282,7 +288,6 @@ const JobEdit = ({ params }) => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

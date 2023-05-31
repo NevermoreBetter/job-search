@@ -15,6 +15,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import InputLabel from "@mui/material/InputLabel";
 import { data } from "autoprefixer";
 
 const ITEM_HEIGHT = 48;
@@ -32,9 +33,10 @@ const cities = ["Миколаїв", "Київ", "Одеса"];
 
 const JobCard = () => {
   const [open, setOpen] = useState(false);
+  const [openError, setOpenError] = useState(false);
   const [name, setName] = useState();
   const [description, setDescription] = useState();
-  const [distance, setDistance] = useState();
+  const [typeName, setTypeName] = useState();
   const [cityName, setCityName] = useState([]);
   const [salary, setSalary] = useState([100, 1000]);
   const [experience, setExperience] = useState();
@@ -63,7 +65,7 @@ const JobCard = () => {
     if (reason === "clickaway") {
       return;
     }
-
+    setOpenError(false);
     setOpen(false);
   };
 
@@ -81,54 +83,76 @@ const JobCard = () => {
   );
 
   async function handleAddJob() {
-    addDoc(dbRef, {
-      Name: name,
-      Description: description,
-      Author: userName,
-      Type: distance,
-      City: cityName,
-      Salary: salary,
-      Experience: experience,
-      Company: companyName,
-      UserPic: currentUser.photoURL,
-      Date: new Date(),
-      UserId: currentUser.uid,
-    })
-      .then(() => {
-        handleClick();
-        setName("");
-        setDescription("");
-        setDistance("");
+    if (
+      name &&
+      description &&
+      userName &&
+      typeName &&
+      cityName &&
+      salary &&
+      experience &&
+      companyName &&
+      currentUser.photoURL &&
+      currentUser.uid
+    ) {
+      addDoc(dbRef, {
+        Name: name,
+        Description: description,
+        Author: userName,
+        Type: typeName,
+        City: cityName,
+        Salary: salary,
+        Experience: experience,
+        Company: companyName,
+        UserPic: currentUser.photoURL,
+        Date: new Date(),
+        UserId: currentUser.uid,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then(() => {
+          handleClick();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setOpenError(true);
+    }
   }
 
   return (
     <div className="create container">
       <div className="mb-4 mt-[5rem]">
-        <label htmlFor="jobName" className="mr-4">
-          Посада
+        <label
+          for="jobName"
+          class="block mb-2  font-medium dark:text-gray-900 text-white"
+        >
+          Посада:
         </label>
         <input
-          className="rounded-md border border-black outline-none p-2"
+          type="text"
           id="jobName"
+          class="dark:bg-gray-50 border dark:border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Назва посади"
           value={name}
           onChange={(e) => setName(e.target.value)}
-        />
+          required
+        ></input>
       </div>
       <div className="mb-4">
-        <label htmlFor="jobDescription" className="mr-4">
-          Опис
+        <label
+          for="jobDescription"
+          class="block mb-2  font-medium dark:text-gray-900 text-white"
+        >
+          Опис:
         </label>
         <textarea
-          className="rounded-md border border-black outline-none p-2"
           id="jobDescription"
+          rows="4"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          cols="30"
-          rows="10"
+          class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Опишіть деталі роботи"
+          required
         ></textarea>
       </div>
       <div className="mb-4 flex items-center">
@@ -137,13 +161,14 @@ const JobCard = () => {
         </label>
 
         <FormControl>
+          <InputLabel id="demo-simple-select-label1">Вибір</InputLabel>
           <Select
+            labelId="demo-simple-select-label1"
             className="min-w-[10rem]"
             id="jobType"
-            value={distance}
-            onChange={(e) => setDistance(e.target.value)}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+            value={typeName}
+            label="Вибір"
+            onChange={(e) => setTypeName(e.target.value)}
           >
             <MenuItem value="Дистанційно">Дистанційно</MenuItem>
             <MenuItem value="В офісі">В офісі</MenuItem>
@@ -191,12 +216,13 @@ const JobCard = () => {
         </label>
 
         <FormControl>
+          <InputLabel id="demo-simple-select-label2">Вибір</InputLabel>
           <Select
             className="min-w-[7rem]"
-            value={distance}
+            value={experience}
             onChange={(e) => setExperience(e.target.value)}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
+            labelId="demo-simple-select-label2"
+            label="Вибір"
           >
             <MenuItem value="Без досвіду">Без досвіду</MenuItem>
             <MenuItem value="1 рік">1 рік</MenuItem>
@@ -206,13 +232,27 @@ const JobCard = () => {
           </Select>
         </FormControl>
       </div>
-      <button onClick={handleAddJob}>Додати</button>
+      <button
+        type="button"
+        onClick={handleAddJob}
+        class="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+      >
+        Додати
+      </button>
+
       <div>
         <Snackbar
           open={open}
           autoHideDuration={6000}
           onClose={handleClose}
           message="Заяву створено"
+          action={action}
+        />
+        <Snackbar
+          open={openError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Заповніть всі поля"
           action={action}
         />
       </div>

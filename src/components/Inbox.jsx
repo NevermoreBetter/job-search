@@ -43,7 +43,6 @@ const Inbox = () => {
   console.log(messageToShow);
   return (
     <div className="inbox container ">
-      <Navbar />
       {messageToShow.map((message) => {
         return (
           <div className="mt-[5rem] border-8">
@@ -64,7 +63,6 @@ const Inbox = () => {
           </div>
         );
       })}
-      <Footer />
     </div>
   );
 };

@@ -143,6 +143,13 @@ const Navbar = () => {
                       <Link href="/jobs/create-job">Профіль</Link>
                     )}
                   </li>
+                  <li className="block px-4 py-2 text-black dark:hover:bg-gray-300 hover:bg-gray-600 cursor-pointer">
+                    {acc ? (
+                      ""
+                    ) : (
+                      <Link href={`jobs/company/edit`}>Про компанію</Link>
+                    )}
+                  </li>
                   <li
                     className="block px-4 py-2 text-black dark:hover:bg-gray-300 hover:bg-gray-600 cursor-pointer"
                     onClick={changeAcc}
