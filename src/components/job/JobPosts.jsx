@@ -75,7 +75,7 @@ const JobPosts = () => {
   }, []);
 
   return (
-    <div className="container flex justify-start mt-[5rem] mb-[5rem] relative z-auto">
+    <div className="flex justify-start mt-[5rem] mb-[5rem] relative z-auto">
       <div className="flex flex-col justify-start gap-8 mr-[15%]">
         <div className="gap-2">
           <label

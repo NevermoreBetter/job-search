@@ -167,11 +167,13 @@ const WorkerCard = () => {
       const fieldsToEdit = doc(dbRef, ID);
       await updateDoc(fieldsToEdit, {
         Name: name,
+        Author: userName,
         Description: description,
         Type: typeName,
         Experience: experience,
         City: cityName,
         Salary: salary,
+        UserPic: currentUser.photoURL,
       });
       handleClick();
     } catch (error) {

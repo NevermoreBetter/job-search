@@ -75,7 +75,7 @@ const Navbar = () => {
             href="/worker"
             className={pathname === "/worker" ? "active" : ""}
           >
-            Резюме
+            Кандидати
           </Link>
         )}
         {acc ? (
@@ -93,11 +93,19 @@ const Navbar = () => {
             Список ваших вакансій
           </Link>
         )}
-        {acc ? "робітник" : "роботодавець"}
       </div>
       <div>
         {currentUser !== null ? (
-          <div class="flex gap-8 items-center ">
+          <div class="flex gap-2 items-center ">
+            {acc ? (
+              <div className="bg-green-600 text-sm rounded-full p-2 text-white">
+                Робітник
+              </div>
+            ) : (
+              <div className="bg-green-600 text-sm rounded-full p-2 text-white">
+                Роботодавець
+              </div>
+            )}
             <div ref={ref} className="relative">
               <button
                 id="dropdownAvatarNameButton"

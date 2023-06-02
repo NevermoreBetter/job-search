@@ -125,7 +125,7 @@ const CompanyCard = () => {
       <div className="mb-4">
         <label
           for="companyDescription"
-          class="block mb-2  font-medium dark:text-gray-900 text-white"
+          class="block mb-2 dark:text-gray-900 text-white"
         >
           Опис:
         </label>

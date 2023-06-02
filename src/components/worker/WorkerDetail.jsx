@@ -39,6 +39,7 @@ const WorkerDetail = ({ params }) => {
       Message: message,
       SenderId: currentUser.uid,
       SenderName: currentUser.displayName,
+      SenderPic: currentUser.photoURL,
       RecieverId: workerDetails.map((data) => {
         return data.UserId;
       }),
@@ -64,18 +65,10 @@ const WorkerDetail = ({ params }) => {
                 <div className="mb-4">
                   {data.Salary.map((salary) => {
                     return `${salary}$`;
-                  }).join("-")}
+                  }).join("-")}{" "}
+                  / місяць
                 </div>
-                <div className="flex gap-4 items-center">
-                  <Image
-                    className="rounded-full"
-                    src={data.UserPic}
-                    width={50}
-                    height={50}
-                    alt="profile picture"
-                  />
-                  {data.Author}
-                </div>
+
                 <br />
                 <div
                   style={{ whiteSpace: "pre-line" }}
@@ -83,10 +76,58 @@ const WorkerDetail = ({ params }) => {
                   dangerouslySetInnerHTML={{ __html: data.Description }}
                 ></div>
                 <br />
-                <div>
-                  Дата публікації{" "}
-                  {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
+                <div className="flex justify-between items-center text-base text-gray-600">
+                  <div className="flex gap-4 items-center">
+                    <Image
+                      className="rounded-full"
+                      src={data.UserPic}
+                      width={35}
+                      height={35}
+                      alt="profile picture"
+                    />
+                    {data.Author}
+                  </div>
+                  <div>
+                    Дата публікації:{" "}
+                    {new Date(data.Date.seconds * 1000).toLocaleString(
+                      "uk-UA",
+                      {
+                        day: "numeric",
+                        month: "long",
+                      }
+                    )}
+                  </div>
                 </div>
+                {currentUser.uid !== postId[0] && !acc ? (
+                  <form onSubmit={handleAddMessage}>
+                    <br />
+                    <label
+                      for="message"
+                      class="block mb-2 dark:text-gray-900 text-white"
+                    >
+                      Запропонувати вакансію:
+                    </label>
+                    <textarea
+                      id="message"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      rows="4"
+                      class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Опишіть пропозицію детальніше"
+                      required
+                    />
+
+                    <br />
+                    <button
+                      type="submit"
+                      className="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    >
+                      Запропонувати
+                    </button>
+                  </form>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="border-4 p-2 rounded-md w-[20%] h-fit">
                 <div className="flex items-center">
@@ -100,28 +141,12 @@ const WorkerDetail = ({ params }) => {
                 </div>
                 <div className="flex items-center">
                   <HiOfficeBuilding />
-                  {data.Type}
+                  {data.Type.join(", ")}
                 </div>
               </div>
             </div>
           );
         })}
-        {currentUser.uid !== postId[0] && !acc ? (
-          <form onSubmit={handleAddMessage}>
-            <br />
-            <label>
-              Message:
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-            </label>
-            <br />
-            <button type="submit">Send</button>
-          </form>
-        ) : (
-          ""
-        )}
       </>
     </div>
   );
