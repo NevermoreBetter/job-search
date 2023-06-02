@@ -44,7 +44,7 @@ const Company = ({ params }) => {
   return (
     <div className="container mt-[5rem]">
       <div className="mb-8">
-        Про компанію {companyName} :
+        <div className="mb-4"> Про компанію {companyName} :</div>
         <br />
         {companyDescription}
       </div>
