@@ -43,28 +43,47 @@ const Company = ({ params }) => {
 
   return (
     <div className="container mt-[5rem]">
-      {companyName}
-      <br />
-      {companyDescription}
-      <br />
+      <div className="mb-8">
+        Про компанію {companyName} :
+        <br />
+        {companyDescription}
+      </div>
+
       {displayJobs.map((data) => {
         return (
-          <div className="shadow-xl p-2 rounded-md border-8" key={data.id}>
-            <Link href={`/jobs/${data.id}`}>
-              <h2 className="text-teal-500 break-words mb-2">{data.Name}</h2>
-            </Link>
+          <div
+            className="mb-8 shadow-2xl p-4 rounded-md border-2 w-[100%] "
+            key={data.id}
+          >
+            <div className="flex items-center justify-between">
+              <Link href={`/jobs/${data.id}`}>
+                <h2 className="text-teal-500 break-words mb-2">{data.Name}</h2>
+              </Link>
+
+              <p className="text-sm">
+                {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA", {
+                  day: "numeric",
+                  month: "long",
+                })}
+              </p>
+            </div>
             {data.Salary.map((salary) => {
               return `${salary}$`;
             }).join("-")}
             <br />
-            <div className="flex gap-4 text-sm">
-              <div> {data.Experience}</div>
-              <div>{data.Type}</div>
-              <div>{data.City.join(", ")}</div>
+            <div className="flex gap-4 text-sm mt-3 font-bold">
+              <div className="bg-gray-200 rounded-md p-2 text-gray-500">
+                {data.Experience}
+              </div>
+              <div className="bg-gray-200 rounded-md p-2  text-orange-500">
+                {data.Type}
+              </div>
+              <div className="bg-gray-200 rounded-md p-2  text-pink-500">
+                {data.City.join(", ")}
+              </div>
             </div>
             <br />
             <div className="break-words">{data.Description}</div>
-            <br />
           </div>
         );
       })}

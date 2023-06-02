@@ -54,7 +54,6 @@ const WorkerDetail = ({ params }) => {
 
   return (
     <div className="worker-detail container">
-      <Navbar />
       <>
         {workerDetails.map((data) => {
           return (

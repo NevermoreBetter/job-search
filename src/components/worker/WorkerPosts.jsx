@@ -7,6 +7,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import Link from "next/link";
 import useGetWorkers from "@/hooks/fetchWorkers";
+import { data } from "autoprefixer";
 
 const WorkerPosts = () => {
   const { workersData, isLoading } = useGetWorkers();
@@ -36,7 +37,9 @@ const WorkerPosts = () => {
       return regex.test(data.Name) || regex.test(data.Description);
     });
 
-  dataToShow.reverse();
+  dataToShow.sort((a, b) => {
+    return new Date(b.Date.seconds) - new Date(a.Date.seconds);
+  });
 
   useEffect(() => {
     function handleScroll() {
@@ -168,9 +171,19 @@ const WorkerPosts = () => {
               className="mb-8 shadow-2xl p-4 rounded-md border-2 w-[100%] "
               key={data.id}
             >
-              <Link href={`/worker/${data.id}`}>
-                <h2 className="text-teal-500 break-words mb-2">{data.Name}</h2>
-              </Link>
+              <div className="flex items-center justify-between">
+                <Link href={`/worker/${data.id}`}>
+                  <h2 className="text-teal-500 break-words mb-2">
+                    {data.Name}
+                  </h2>
+                </Link>
+                <p className="text-sm">
+                  {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA", {
+                    day: "numeric",
+                    month: "long",
+                  })}
+                </p>
+              </div>
               {data.Salary.map((salary) => {
                 return `${salary}$`;
               }).join("-")}
@@ -189,7 +202,7 @@ const WorkerPosts = () => {
               <br />
               <div className="break-words">{data.Description}</div>
               <br />
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <Image
                   className="rounded-full"
                   src={data.UserPic}
@@ -198,11 +211,7 @@ const WorkerPosts = () => {
                   alt="profile picture"
                 />
                 <br />
-                <div>
-                  {data.Author}
-                  <br />
-                  {new Date(data.Date.seconds * 1000).toLocaleString("uk-UA")}
-                </div>
+                <p className="text-gray-400">{data.Author}</p>
               </div>
             </div>
           );

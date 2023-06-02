@@ -92,7 +92,6 @@ const JobDetail = ({ params }) => {
   }, []);
   return (
     <div className="job-detail container">
-      <Navbar />
       <>
         {jobDetails.map((data) => {
           return (

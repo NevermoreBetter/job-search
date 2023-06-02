@@ -200,38 +200,50 @@ const WorkerCard = () => {
   }, [workersData]);
 
   return (
-    <div className="create container">
-      <Navbar />
-      <div className={isIdExists ? "flex mt-[5rem]" : "block mt-[5rem]"}>
+    <div className="create container mb-8">
+      <div
+        className={
+          isIdExists ? "flex mt-[5rem] justify-between" : "block mt-[5rem]"
+        }
+      >
         <div className={isIdExists ? "w-[45%]" : "w-[100%]"}>
           <div className="mb-4 ">
-            <label htmlFor="workerName" className="mr-4">
-              Посада
+            <label
+              for="workerName"
+              class="block mb-2  font-medium dark:text-gray-900 text-white"
+            >
+              Посада:
             </label>
             <input
-              className="rounded-md border border-black outline-none p-2 "
+              type="text"
               id="workerName"
+              class="dark:bg-gray-50 border dark:border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="На яку посаду ви претендуєте"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              maxlength="50"
-            />
+              required
+            ></input>
           </div>
           <div className="mb-4 ">
-            <label htmlFor="workerDescription" className="mr-4">
-              Трохи про себе
+            <label
+              for="jobDescription"
+              class="block mb-2  font-medium dark:text-gray-900 text-white"
+            >
+              Трохи про себе:
             </label>
             <textarea
-              className="rounded-md border border-black outline-none p-2 "
-              id="workerDescription"
+              id="jobDescription"
+              rows="4"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              cols="30"
-              rows="10"
+              class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Опишіть свої навички"
+              required
             ></textarea>
           </div>
-          <div className="mb-4 items-center ">
+          <div className="flex mb-4 items-center ">
             <label htmlFor="workerType" className="mr-4 ">
-              Тип зайнятості
+              Тип зайнятості:
             </label>
 
             <FormControl>
@@ -315,7 +327,10 @@ const WorkerCard = () => {
             </FormControl>
           </div>
 
-          <button onClick={isIdExists ? handleUpdateWorker : handleAddWorker}>
+          <button
+            onClick={isIdExists ? handleUpdateWorker : handleAddWorker}
+            className="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          >
             {isIdExists ? "Редагувати" : "Додати"}
           </button>
           <div>
@@ -333,44 +348,53 @@ const WorkerCard = () => {
             <h2> Так виглядає ваше резюме:</h2>
             {dataToShow.map((data) => {
               return (
-                <div>
-                  <div
-                    className="mb-8 shadow-xl p-2 rounded-md border-8 w-[100%] "
-                    key={data.id}
-                  >
+                <div
+                  className="mb-8 shadow-2xl p-4 rounded-md border-2 w-[100%] "
+                  key={data.id}
+                >
+                  <div className="flex items-center justify-between">
                     <h2 className="text-teal-500 break-words mb-2">
                       {data.Name}
                     </h2>
 
-                    {data.Salary.map((salary) => {
-                      return `${salary}$`;
-                    }).join("-")}
-                    <br />
-                    <div className="flex gap-4 text-sm">
-                      <div> {data.Experience}</div>
-                      <div>{data.Type.join(", ")}</div>
-                      <div>{data.City.join(", ")}</div>
+                    <p className="text-sm">
+                      {new Date(data.Date.seconds * 1000).toLocaleString(
+                        "uk-UA",
+                        {
+                          day: "numeric",
+                          month: "long",
+                        }
+                      )}
+                    </p>
+                  </div>
+                  {data.Salary.map((salary) => {
+                    return `${salary}$`;
+                  }).join("-")}
+                  <br />
+                  <div className="flex gap-4 text-sm mt-3 font-bold">
+                    <div className="bg-gray-200 rounded-md p-2 text-gray-500">
+                      {data.Experience}
                     </div>
-                    <br />
-                    <div className="break-words">{data.Description}</div>
-                    <br />
-                    <div className="flex gap-2">
-                      <Image
-                        className="rounded-full"
-                        src={data.UserPic}
-                        width={50}
-                        height={50}
-                        alt="profile picture"
-                      />
-                      <br />
-                      <div>
-                        {data.Author}
-                        <br />
-                        {new Date(data.Date.seconds * 1000).toLocaleString(
-                          "uk-UA"
-                        )}
-                      </div>
+                    <div className="bg-gray-200 rounded-md p-2  text-orange-500">
+                      {data.Type.join(", ")}
                     </div>
+                    <div className="bg-gray-200 rounded-md p-2  text-pink-500">
+                      {data.City.join(", ")}
+                    </div>
+                  </div>
+                  <br />
+                  <div className="break-words">{data.Description}</div>
+                  <br />
+                  <div className="flex gap-2 items-center">
+                    <Image
+                      className="rounded-full"
+                      src={data.UserPic}
+                      width={50}
+                      height={50}
+                      alt="profile picture"
+                    />
+                    <br />
+                    <p className="text-gray-400">{data.Author}</p>
                   </div>
                 </div>
               );
@@ -380,7 +404,6 @@ const WorkerCard = () => {
           ""
         )}
       </div>
-      <Footer />
     </div>
   );
 };

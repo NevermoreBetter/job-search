@@ -106,30 +106,43 @@ const CompanyCard = () => {
   return (
     <div className="create container">
       <div className="mb-4 mt-[5rem]">
-        <label htmlFor="jobName" className="mr-4">
-          Назва
+        <label
+          for="companyName"
+          class="block mb-2  font-medium dark:text-gray-900 text-white"
+        >
+          Назва:
         </label>
         <input
-          className="rounded-md border border-black outline-none p-2"
-          id="jobName"
+          type="text"
+          id="companyName"
+          class="dark:bg-gray-50 border dark:border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Назва компанії"
           value={name}
           onChange={(e) => setName(e.target.value)}
-        />
+          required
+        ></input>
       </div>
       <div className="mb-4">
-        <label htmlFor="jobDescription" className="mr-4">
-          Про компанію
+        <label
+          for="companyDescription"
+          class="block mb-2  font-medium dark:text-gray-900 text-white"
+        >
+          Опис:
         </label>
         <textarea
-          className="rounded-md border border-black outline-none p-2"
-          id="jobDescription"
+          id="companyDescription"
+          rows="4"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          cols="30"
-          rows="10"
+          class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Опишіть компанію детальніше"
+          required
         ></textarea>
       </div>
-      <button onClick={id ? handleUpdateCompany : handleAddCompany}>
+      <button
+        onClick={id ? handleUpdateCompany : handleAddCompany}
+        className="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+      >
         {id ? "Редагувати" : "Додати"}
       </button>
       <div>
