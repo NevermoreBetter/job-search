@@ -1,14 +1,11 @@
-import Jobs from "@/components/job/Jobs";
 import React from "react";
-import { AuthProvider } from "@/context/AuthContext";
+import JobPosts from "@/components/job/JobPosts";
 
 const JobsPage = () => {
   return (
-    // <AuthProvider>
     <div>
-      <Jobs />
+      <JobPosts />
     </div>
-    /* </AuthProvider> */
   );
 };
 

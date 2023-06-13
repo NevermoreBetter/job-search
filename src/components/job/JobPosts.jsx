@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 // import { useAuth } from "@/context/AuthContext";
@@ -16,14 +17,16 @@ import "regenerator-runtime/runtime";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-
+import { useSearchParams } from "next/navigation";
 const JobPosts = () => {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search");
   const [readMore, setReadMore] = useState(false);
   const { jobsData, isLoading } = useGetJobs();
   const [isSticky, setIsSticky] = useState(false);
   const [cityFilter, setCityFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(search ? search : "");
   const dataToShow = jobsData
     .filter((data) => {
       if (cityFilter === "all") return true;
@@ -41,7 +44,7 @@ const JobPosts = () => {
   dataToShow.sort((a, b) => {
     return new Date(b.Date.seconds) - new Date(a.Date.seconds);
   });
-
+  console.log(search);
   const {
     transcript,
     listening,
@@ -75,7 +78,7 @@ const JobPosts = () => {
   }, []);
 
   return (
-    <div className="flex justify-start mt-[5rem] mb-[5rem] relative z-auto">
+    <div className="container flex justify-start mt-[5rem] mb-[5rem] relative z-auto">
       <div className="flex flex-col justify-start gap-8 mr-[15%]">
         <div className="gap-2">
           <label
