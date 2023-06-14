@@ -6,6 +6,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import Link from "next/link";
+import Image from "next/image";
 
 const Home = () => {
   const { currentUser } = useAuth();
@@ -17,17 +18,20 @@ const Home = () => {
   } = useSpeechRecognition();
   // console.log(currentUser);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchCat, setSearchCat] = useState("");
   return (
-    <div className="home container">
+    <div className="home container flex items-center mt-[5rem]">
       <div>
-        <h1 className="mt-[5rem]">На крок ближче до нової роботи</h1>
-        <p>
+        <h1 className="mt-[5rem] mb-10 text-8xl inline-block w-[70%]">
+          На крок ближче до нової роботи
+        </h1>
+        <p className=" mb-5 text-gray-600 w-[80%] leading-8">
           Досліджуйте тисячі можливостей роботи з усією необхідною інформацією.
           Керуйте всіма заявками на роботу від початку до кінця.
         </p>
-        <form className="flex items-center  transition-all duration-500 ease-in-out bg-white w-full">
+        <form className="flex items-center mb-5 transition-all duration-500 ease-in-out bg-white w-[80%]">
           <label for="voice-search" class="sr-only">
-            Search
+            Професія яка вас цікавить
           </label>
           <div class="relative w-full">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -77,22 +81,51 @@ const Home = () => {
             ) : (
               ""
             )}
-            <Link
-              href={`/jobs${searchTerm ? `?search=${searchTerm}` : ``}`}
-              passHref
-            >
-              <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Submit
-              </button>
-            </Link>
           </div>
+          <Link
+            href={`/jobs${searchTerm ? `?search=${searchTerm}` : ``}`}
+            passHref
+          >
+            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              Пошук
+            </button>
+          </Link>
         </form>
-        <ul>
-          Популярні категорії:
-          <li>Front-end Dev</li>
-          <li>Back-end Dev</li>
-          <li>UX Designer</li>
+        <ul className="flex gap-4">
+          <p>Популярні категорії:</p>
+          <Link href={`/jobs?category=${searchCat}`} passHref>
+            <li
+              className="underline"
+              onMouseEnter={(e) => setSearchCat(e.target.textContent)}
+            >
+              Front-End
+            </li>
+          </Link>
+          <Link href={`/jobs?category=${searchCat}`} passHref>
+            <li
+              className="underline"
+              onMouseEnter={(e) => setSearchCat(e.target.textContent)}
+            >
+              Back-End
+            </li>
+          </Link>
+          <Link href={`/jobs?category=${searchCat}`} passHref>
+            <li
+              className="underline"
+              onMouseEnter={(e) => setSearchCat(e.target.textContent)}
+            >
+              UX-Designer
+            </li>
+          </Link>
         </ul>
+      </div>
+      <div>
+        <Image
+          src="/Hotpot.png"
+          width="700"
+          height="700"
+          className="rounded-full"
+        />
       </div>
     </div>
   );

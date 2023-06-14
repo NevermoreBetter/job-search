@@ -21,12 +21,15 @@ import { useSearchParams } from "next/navigation";
 const JobPosts = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get("search");
+  const searchCat = searchParams.get("category");
   const [readMore, setReadMore] = useState(false);
   const { jobsData, isLoading } = useGetJobs();
   const [isSticky, setIsSticky] = useState(false);
   const [cityFilter, setCityFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState(search ? search : "");
+  const [searchTerm, setSearchTerm] = useState(
+    search ? search : "" || searchCat ? searchCat : ""
+  );
   const dataToShow = jobsData
     .filter((data) => {
       if (cityFilter === "all") return true;
