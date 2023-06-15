@@ -26,7 +26,12 @@ function useGetJobs() {
     fetchJobs();
   }, []);
 
-  return { jobsData, isLoading };
+  const refetch = async () => {
+    setIsLoading(true);
+    await fetchJobs();
+  };
+
+  return { jobsData, isLoading, refetch };
 }
 
 export default useGetJobs;

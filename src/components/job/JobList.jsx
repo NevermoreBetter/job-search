@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
+  deleteDoc,
   doc,
   setDoc,
   deleteField,
@@ -24,31 +25,28 @@ const JobList = () => {
   // const [jobsData, setJobsData] = useState([]);
   const userName = currentUser.displayName;
   // const dbRef = collection(db, "jobs");
-  const { jobsData, isLoading } = useGetJobs();
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  // async function getJobs() {
-  //   try {
-  //     const response = await getDocs(dbRef);
-  //     const data = response.docs.map((doc) => ({
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     }));
-  //     setJobsData(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  const { jobsData, isLoading, refetch } = useGetJobs();
+  const dbRef = collection(db, "jobs");
+  // if (isLoading) {
+  //   return <p>Loading...</p>;
   // }
+
   const dataToShow = jobsData.filter((data) => {
     if (data.UserId === currentUser.uid) return data;
   });
 
-  // useEffect(() => {
-  //   getJobs();
-  // }, []);
+  const deleteItem = async (id) => {
+    try {
+      if (confirm(`Видалити посаду?`)) {
+        const itemToDelete = doc(dbRef, id);
+        await deleteDoc(itemToDelete).then(() => {
+          refetch();
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="container ">
@@ -126,10 +124,16 @@ const JobList = () => {
               </div>
               <Link
                 href={`/jobs/job-list/${data.id}`}
-                className="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                className="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-500 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black hover:dark:text-white border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
               >
                 Редагувати
               </Link>
+              <button
+                className="text-gray-900 dark:bg-red-500 border dark:border-gray-300 focus:outline-none dark:hover:bg-white focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-white hover:dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                onClick={() => deleteItem(data.id)}
+              >
+                Видалити
+              </button>
             </div>
           );
         })}

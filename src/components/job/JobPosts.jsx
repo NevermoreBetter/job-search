@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import useGetJobs from "@/hooks/fetchJobs";
 import "regenerator-runtime/runtime";
+import Slider from "@mui/material/Slider";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -27,6 +28,7 @@ const JobPosts = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [cityFilter, setCityFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [salaryFilter, setSalaryFilter] = useState([100, 1000]);
   const [searchTerm, setSearchTerm] = useState(
     search ? search : "" || searchCat ? searchCat : ""
   );
@@ -35,6 +37,13 @@ const JobPosts = () => {
       if (cityFilter === "all") return true;
       return data.City.includes(cityFilter);
     })
+    .filter((data) => {
+      if (salaryFilter[0] === 0 && salaryFilter[1] === 0) return true;
+      return (
+        data.Salary[0] >= salaryFilter[0] && data.Salary[1] <= salaryFilter[1]
+      );
+    })
+
     .filter((data) => {
       if (typeFilter === "all") return true;
       return data.Type.includes(typeFilter);
@@ -54,6 +63,10 @@ const JobPosts = () => {
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
+
+  const handleChangeSalary = (event, newValue) => {
+    setSalaryFilter(newValue);
+  };
 
   // if (isLoading) {
   //   return <p>Loading...</p>;
@@ -118,6 +131,24 @@ const JobPosts = () => {
             <option value="Фріланс">Фріланс</option>
             <option value="Дистанційно">Дистанційно</option>
           </select>
+        </div>
+        <div className="gap-2">
+          <label
+            htmlFor="jobSalary"
+            className="block mb-2 text-lg font-medium dark:text-gray-900 text-white"
+          >
+            Зарплата
+          </label>
+          <div id="jobSalary">
+            <Slider
+              getAriaLabel={() => "Зарплата"}
+              value={salaryFilter}
+              max={10000}
+              step={100}
+              onChange={handleChangeSalary}
+              valueLabelDisplay="auto"
+            />
+          </div>
         </div>
       </div>
       <div className="max-w-[60%] flex-1 flex flex-col items-center">
