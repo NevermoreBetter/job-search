@@ -28,7 +28,7 @@ const JobPosts = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [cityFilter, setCityFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-  const [salaryFilter, setSalaryFilter] = useState([100, 1000]);
+  const [salaryFilter, setSalaryFilter] = useState([100, 10000]);
   const [searchTerm, setSearchTerm] = useState(
     search ? search : "" || searchCat ? searchCat : ""
   );

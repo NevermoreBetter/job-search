@@ -15,24 +15,6 @@ const Settings = () => {
   const { currentUser } = useAuth();
   console.log(currentUser);
 
-  const uploadFile = async () => {
-    if (avatar == null) return;
-    const fileRef = ref(storage, `avatars/${avatar.name + nanoid()}`);
-    uploadBytes(fileRef, avatar)
-      .then(() => {
-        alert("resume sent");
-        return getDownloadURL(fileRef);
-      })
-      .then((fileUrl) => {
-        setResume(fileUrl);
-        alert(resume);
-        alert("file get");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   const handleUpdateProfile = (e) => {
     e.preventDefault();
     const name = nameInputRef.current.value;

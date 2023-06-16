@@ -7,11 +7,19 @@ import {
   addDoc,
   updateDoc,
   getDocs,
+  query,
+  where,
+  documentId,
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
+import { storage } from "@/firebase/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import Avatar from "@mui/material/Avatar";
+import { nanoid } from "nanoid";
+import useGetJobs from "@/hooks/fetchJobs";
 const CompanyCard = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -19,7 +27,21 @@ const CompanyCard = () => {
   const [companyData, setCompanyData] = useState();
   const { currentUser } = useAuth();
   const dbRef = collection(db, "company");
+  const dbJobsRef = collection(db, "jobs");
+  const { jobsData, isLoading } = useGetJobs();
   const [open, setOpen] = useState(false);
+  const [picUpload, setPicUpload] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+
+  const filterJobsData = jobsData.filter((data) => {
+    if (data.UserId === currentUser.uid) return data;
+  });
+
+  const idsToUpdate = filterJobsData.map((data) => {
+    return data.id;
+  });
+
+  console.log(idsToUpdate);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -45,36 +67,64 @@ const CompanyCard = () => {
     setOpen(true);
   };
 
-  async function handleAddCompany() {
-    addDoc(dbRef, {
-      Name: name,
-      Description: description,
-      UserId: currentUser.uid,
-    })
+  const uploadAvatar = async () => {
+    if (picUpload == null) return;
+    const avatarRef = ref(
+      storage,
+      `companyAvatar/${picUpload.name + nanoid()}`
+    );
+    uploadBytes(avatarRef, picUpload)
       .then(() => {
-        handleClick();
+        return getDownloadURL(avatarRef);
       })
-      .catch((err) => {
-        console.log(err);
+      .then((fileUrl) => {
+        setAvatar(fileUrl);
+        alert(fileUrl);
+      })
+      .catch((error) => {
+        console.error(error);
       });
-  }
+    alert(avatar);
+  };
 
-  async function handleUpdateCompany() {
+  async function handleAddCompany() {
     try {
-      const fieldsToEdit = doc(dbRef, id);
-      await updateDoc(fieldsToEdit, {
+      addDoc(dbRef, {
         Name: name,
         Description: description,
+        Avatar: avatar,
+        UserId: currentUser.uid,
       });
-      handleClick();
     } catch (error) {
       console.log(error);
     }
   }
 
-  const getFields = (updName, updDescription, updID) => {
+  async function handleUpdateCompany() {
+    try {
+      alert(name);
+      const fieldsToEdit = doc(dbRef, id);
+      await updateDoc(fieldsToEdit, {
+        Name: name,
+        Description: description,
+        Avatar: avatar,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  idsToUpdate.forEach(async (id) => {
+    const fieldsToEdit = doc(dbJobsRef, id);
+    await updateDoc(fieldsToEdit, {
+      Company: name,
+    });
+  });
+
+  const getFields = (updName, updDescription, updAvatar, updID) => {
     setName(updName);
     setDescription(updDescription);
+    setAvatar(updAvatar);
     setID(updID);
   };
 
@@ -92,65 +142,106 @@ const CompanyCard = () => {
     getCompany();
   }, [open]);
 
+  // useEffect(() => {
+  //   if (avatar !== null) {
+  //     id ? handleUpdateCompany() : handleAddCompany();
+  //   }
+  // }, [avatar]);
+
   useEffect(() => {
     if (companyData) {
       const company = companyData.find(
         (data) => data.UserId === currentUser.uid
       );
       if (company) {
-        getFields(company.Name, company.Description, company.id);
+        getFields(
+          company.Name,
+          company.Description,
+          company.Avatar,
+          company.id
+        );
       }
     }
   }, [companyData]);
   console.log(companyData);
   return (
     <div className="create container">
-      <div className="mb-4 mt-[5rem]">
-        <label
-          for="companyName"
-          class="block mb-2  font-medium dark:text-gray-900 text-white"
-        >
-          Назва:
-        </label>
-        <input
-          type="text"
-          id="companyName"
-          class="dark:bg-gray-50 border dark:border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Назва компанії"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        ></input>
-      </div>
-      <div className="mb-4">
-        <label
-          for="companyDescription"
-          class="block mb-2 dark:text-gray-900 text-white"
-        >
-          Опис:
-        </label>
-        <textarea
-          id="companyDescription"
-          rows="4"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Опишіть компанію детальніше"
-          required
-        ></textarea>
-      </div>
-      <button
-        onClick={id ? handleUpdateCompany : handleAddCompany}
-        className="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          uploadAvatar()
+            .then(() => {
+              id ? handleUpdateCompany() : handleAddCompany();
+            })
+            .then(() => {
+              idsToUpdate.forEach(async (id) => {
+                const fieldsToEdit = doc(dbJobsRef, id);
+                await updateDoc(fieldsToEdit, {
+                  Company: name,
+                });
+              });
+              alert("Updated");
+            });
+          handleClick();
+        }}
       >
-        {id ? "Редагувати" : "Додати"}
-      </button>
+        <div className="mb-4 mt-[5rem]">
+          <label
+            for="companyName"
+            class="block mb-2  font-medium dark:text-gray-900 text-white"
+          >
+            Назва:
+          </label>
+          <input
+            type="text"
+            id="companyName"
+            class="dark:bg-gray-50 border dark:border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Назва компанії"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          ></input>
+        </div>
+        <div className="mb-4">
+          <label
+            for="companyDescription"
+            class="block mb-2 dark:text-gray-900 text-white"
+          >
+            Опис:
+          </label>
+          <textarea
+            id="companyDescription"
+            rows="4"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Опишіть компанію детальніше"
+            required
+          ></textarea>
+          <label>
+            <Avatar alt="Avatar" src={avatar} />
+          </label>
+          <input
+            id="dropzone-file"
+            onChange={(e) => {
+              setPicUpload(e.target.files[0]);
+            }}
+            type="file"
+          />
+        </div>
+        <button
+          type="submit"
+          className="text-gray-900 dark:bg-white border dark:border-gray-300 focus:outline-none dark:hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full px-5 py-2.5 mr-2 mb-2 bg-gray-800 dark:text-black border-gray-600 hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+        >
+          {id ? "Редагувати" : "Додати"}
+        </button>
+      </form>
       <div>
         <Snackbar
           open={open}
           autoHideDuration={6000}
           onClose={handleClose}
-          message="Компанію створено"
+          message={id ? "Компанію редаговано" : "Компанію створено"}
           action={action}
         />
       </div>

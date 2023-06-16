@@ -14,8 +14,7 @@ import {
 } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 import { db } from "@/firebase/firebase";
-import Navbar from "../Navbar";
-import Footer from "../Footer";
+import useGetCompany from "@/hooks/useFetchCompany";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -45,13 +44,16 @@ const JobEdit = ({ params }) => {
   const [open, setOpen] = useState(false);
   const [jobsData, setJobsData] = useState([]);
   const nameInputRef = useRef();
+
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
   const dbRef = collection(db, "jobs");
-  const existingId = useMemo(() =>
-    jobsData.some((data) => data.UserId == currentUser.uid)
-  );
-
+  const { companyData, isLoading } = useGetCompany();
+  const company = companyData.find((data) => {
+    if (data.UserId.includes(currentUser.uid)) return true;
+  });
+  const companyName = company ? company.Name : null;
+  console.log(companyName);
   const handleAddCity = (event, value) => {
     setCityName(value);
   };
@@ -127,6 +129,7 @@ const JobEdit = ({ params }) => {
         Type: typeName,
         City: cityName,
         Salary: salary,
+        Company: companyName,
         Experience: experience,
         UserId: currentUser.uid,
       });

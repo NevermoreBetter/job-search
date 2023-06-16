@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import useGetJobs from "@/hooks/fetchJobs";
 import useGetCompany from "@/hooks/useFetchCompany";
 import Link from "next/link";
-import Image from "next/image";
+import Avatar from "@mui/material/Avatar";
 const Company = ({ params }) => {
   const { id } = params;
   const { jobsData, isLoading } = useGetJobs();
   const { companyData } = useGetCompany();
   const [companyName, setCompanyName] = useState("");
   const [companyDescription, setCompanyDescription] = useState("");
+  const [companyAvatar, setCompanyAvatar] = useState();
 
   const displayJobs = jobsData.filter((job) => {
     return job.Company.includes(id);
@@ -33,9 +34,10 @@ const Company = ({ params }) => {
       console.log(data);
       setCompanyName(data.Name);
       setCompanyDescription(data.Description);
+      setCompanyAvatar(data.Avatar);
     })
     .then(() => {
-      console.log(companyName, companyDescription);
+      console.log(companyName, companyDescription, companyAvatar);
     })
     .catch((error) => {
       console.error(error);
@@ -44,6 +46,7 @@ const Company = ({ params }) => {
   return (
     <div className="container mt-[5rem]">
       <div className="mb-8">
+        <Avatar src={companyAvatar} />
         <div className="mb-4"> Про компанію {companyName} :</div>
         <br />
         {companyDescription}
