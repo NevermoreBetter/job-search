@@ -18,17 +18,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import InputLabel from "@mui/material/InputLabel";
 import { data } from "autoprefixer";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 const cities = [
   "Вінниця",
   "Дніпро",
@@ -237,7 +226,7 @@ const JobCard = () => {
         </label>
         <textarea
           id="jobDescription"
-          rows="4"
+          rows="14"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -337,7 +326,7 @@ const JobCard = () => {
           open={open}
           autoHideDuration={6000}
           onClose={handleClose}
-          message="Заяву створено"
+          message="Вакансію створено"
           action={action}
         />
         <Snackbar

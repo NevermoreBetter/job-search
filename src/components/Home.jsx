@@ -98,7 +98,7 @@ const Home = () => {
               className="underline"
               onMouseEnter={(e) => setSearchCat(e.target.textContent)}
             >
-              Front-End
+              IT
             </li>
           </Link>
           <Link href={`/jobs?category=${searchCat}`} passHref>
@@ -106,7 +106,7 @@ const Home = () => {
               className="underline"
               onMouseEnter={(e) => setSearchCat(e.target.textContent)}
             >
-              Back-End
+              Маркетинг
             </li>
           </Link>
           <Link href={`/jobs?category=${searchCat}`} passHref>
@@ -114,7 +114,7 @@ const Home = () => {
               className="underline"
               onMouseEnter={(e) => setSearchCat(e.target.textContent)}
             >
-              UX-Designer
+              Дизайн
             </li>
           </Link>
         </ul>

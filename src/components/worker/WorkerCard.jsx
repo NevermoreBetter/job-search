@@ -41,21 +41,87 @@ const MenuProps = {
   },
 };
 
-const cities = ["Миколаїв", "Київ", "Одеса"];
+const cities = [
+  "Вінниця",
+  "Дніпро",
+  "Донецьк",
+  "Житомир",
+  "Запоріжжя",
+  "Івано-Франківськ",
+  "Київ",
+  "Кропивницький",
+  "Луганськ",
+  "Луцьк",
+  "Львів",
+  "Миколаїв",
+  "Одеса",
+  "Полтава",
+  "Рівне",
+  "Суми",
+  "Тернопіль",
+  "Ужгород",
+  "Харків",
+  "Херсон",
+  "Хмельницький",
+  "Черкаси",
+  "Чернівці",
+  "Чернігів",
+];
+
+const jobSpecializations = [
+  "IT",
+  "Маркетинг",
+  "Фінанси",
+  "Банківська справа",
+  "Адміністрування",
+  "HR",
+  "Медицина",
+  "Освіта",
+  "Транспорт",
+  "Спорт",
+  "Культура",
+  "Туризм",
+  "Готельно-ресторанний бізнес",
+  "Юриспруденція",
+  "Будівництво",
+  "Архітектура",
+  "Дизайн",
+  "Реклама",
+  "PR",
+  "Журналістика",
+  "Сільське господарство",
+  "Логістика",
+  "Енергетика",
+  "Виробництво",
+  "Продажі",
+  "Нерухомість",
+  "Страхування",
+  "Телекомунікації",
+  "Автомобільна справа",
+  "Хімічна промисловість",
+  "Металургія",
+  "Машинобудування",
+  "Електроніка",
+  "Технічні науки",
+  "Науки про землю",
+];
+
+jobSpecializations.sort();
 const type = ["Дистанційно", "В офісі", "Фріланс"];
 
 const WorkerCard = () => {
   const [ID, setID] = useState();
   const [name, setName] = useState();
   const [description, setDescription] = useState();
+  const [expDescription, setExpDescription] = useState();
   const [isIdExists, setIsIdExists] = useState(false);
   const [cityName, setCityName] = useState();
   const [typeName, setTypeName] = useState([]);
-  const [salary, setSalary] = useState([100, 1000]);
+  const [salary, setSalary] = useState();
   const [experience, setExperience] = useState();
   const [open, setOpen] = useState(false);
   const [workersData, setWorkersData] = useState([]);
-  const nameInputRef = useRef();
+  const [category, setCategory] = useState();
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
   const dbRef = collection(db, "workers");
@@ -85,6 +151,10 @@ const WorkerCard = () => {
 
   const handleAddCity = (event, value) => {
     setCityName(value);
+  };
+
+  const handleAddCategory = (event, value) => {
+    setCategory(value);
   };
 
   const handleAddType = (event) => {
@@ -125,7 +195,9 @@ const WorkerCard = () => {
     updType,
     updExperience,
     updCity,
-    updSalary
+    updSalary,
+    updCategory,
+    updExpDescription
   ) => {
     setID(updId);
     setName(updName);
@@ -134,50 +206,87 @@ const WorkerCard = () => {
     setExperience(updExperience);
     setCityName(updCity);
     setSalary(updSalary);
+    setCategory(updCategory);
+    setExpDescription(updExpDescription);
   };
 
   function handleExistingId() {
     existingId ? setIsIdExists(true) : setIsIdExists(false);
   }
 
-  function updateName(name) {}
-
   async function handleAddWorker() {
-    try {
-      await addDoc(dbRef, {
+    if (
+      name &&
+      description &&
+      userName &&
+      typeName &&
+      cityName &&
+      salary &&
+      category &&
+      experience &&
+      currentUser.photoURL &&
+      currentUser.uid
+    ) {
+      addDoc(dbRef, {
         Name: name,
-        Author: userName,
         Description: description,
+        Author: userName,
         Type: typeName,
         City: cityName,
+        ExperienceDescription: expDescription,
         Salary: salary,
         Experience: experience,
-        UserId: currentUser.uid,
+        Category: category,
         UserPic: currentUser.photoURL,
         Date: new Date(),
-      });
-      handleClick();
-    } catch (error) {
-      console.log(error);
+        UserId: currentUser.uid,
+      })
+        .then(() => {
+          handleClick();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setOpenError(true);
     }
   }
 
   async function handleUpdateWorker() {
-    try {
-      const fieldsToEdit = doc(dbRef, ID);
-      await updateDoc(fieldsToEdit, {
+    const fieldsToEdit = doc(dbRef, ID);
+    if (
+      name &&
+      description &&
+      userName &&
+      typeName &&
+      cityName &&
+      salary &&
+      category &&
+      experience &&
+      currentUser.photoURL &&
+      currentUser.uid
+    ) {
+      updateDoc(fieldsToEdit, {
         Name: name,
-        Author: userName,
         Description: description,
+        Author: userName,
         Type: typeName,
-        Experience: experience,
         City: cityName,
+        ExperienceDescription: expDescription,
         Salary: salary,
+        ExperienceDescription: expDescription,
+        Experience: experience,
+        Category: category,
         UserPic: currentUser.photoURL,
-      });
-      handleClick();
-    } catch (error) {
-      console.log(error);
+      })
+        .then(() => {
+          handleClick();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setOpenError(true);
     }
   }
 
@@ -196,7 +305,9 @@ const WorkerCard = () => {
         user.Type,
         user.Experience,
         user.City,
-        user.Salary
+        user.Salary,
+        user.Category,
+        user.ExperienceDescription
       );
     }
   }, [workersData]);
@@ -226,6 +337,29 @@ const WorkerCard = () => {
               required
             ></input>
           </div>
+          <div className="mb-4">
+            <div id="workerSalary">
+              <label
+                for="website-admin"
+                class="block mb-2  font-medium dark:text-gray-900 text-white"
+              >
+                Зарплата:
+              </label>
+              <div class="flex">
+                <span class="inline-flex items-center px-3 text-sm dark:text-gray-900 dark:bg-gray-200 border border-r-0 dark:border-gray-300 rounded-l-md bg-gray-600 text-gray-400 border-gray-600">
+                  $
+                </span>
+                <input
+                  type="number"
+                  value={salary}
+                  onChange={(e) => setSalary(e.target.value)}
+                  id="website-admin"
+                  class="rounded-none rounded-r-lg dark:bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm dark:border-gray-300 p-2.5  bg-gray-700 border-gray-600 placeholder-gray-600 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Зарплатня"
+                />
+              </div>
+            </div>
+          </div>
           <div className="mb-4 ">
             <label
               for="jobDescription"
@@ -235,11 +369,28 @@ const WorkerCard = () => {
             </label>
             <textarea
               id="jobDescription"
-              rows="4"
+              rows="14"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Опишіть свої навички"
+              placeholder="Чим конкретніше, тим краще."
+              required
+            ></textarea>
+          </div>
+          <div className="mb-4 ">
+            <label
+              for="jobExperience"
+              class="block mb-2  font-medium dark:text-gray-900 text-white"
+            >
+              Досвід роботи:
+            </label>
+            <textarea
+              id="jobDescription"
+              rows="14"
+              value={expDescription}
+              onChange={(e) => setExpDescription(e.target.value)}
+              class="block p-2.5 w-full text-sm text-gray-900 dark:bg-gray-50 rounded-lg border dark:border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Розкажіть, які проекти та задачі виконували, які технології використовували, ваша роль у команді зараз, і куди бажаєте розвиватися. "
               required
             ></textarea>
           </div>
@@ -277,7 +428,7 @@ const WorkerCard = () => {
           </div>
           <div className="mb-4 flex items-center">
             <label htmlFor="workerCity" className="mr-4 ">
-              Місто
+              Місто:
             </label>
             <div>
               <Autocomplete
@@ -292,22 +443,26 @@ const WorkerCard = () => {
               />
             </div>
           </div>
-          <div>
-            <label htmlFor="workerSalary">Очікувана зарплата</label>
-            <div id="workerSalary">
-              <Slider
-                getAriaLabel={() => "Salary range"}
-                value={salary}
-                max={10000}
-                step={100}
-                onChange={handleAddSalary}
-                valueLabelDisplay="auto"
+          <div className="mb-4 flex items-center">
+            <label htmlFor="category" className="mr-4">
+              Категорія роботи:
+            </label>
+            <div>
+              <Autocomplete
+                disablePortal
+                className="min-w-[9rem]"
+                id="category"
+                options={jobSpecializations}
+                onChange={handleAddCategory}
+                renderInput={(params) => (
+                  <TextField {...params} label="Категорія" />
+                )}
               />
             </div>
           </div>
           <div className="mb-4 flex items-center">
             <label htmlFor="workerExperience" className="mr-4 ">
-              Досвід роботи
+              Досвід роботи:
             </label>
 
             <FormControl>
@@ -369,9 +524,7 @@ const WorkerCard = () => {
                       )}
                     </p>
                   </div>
-                  {data.Salary.map((salary) => {
-                    return `${salary}$`;
-                  }).join("-")}
+                  ${data.Salary}
                   <br />
                   <div className="flex gap-4 text-sm mt-3 font-bold">
                     <div className="bg-gray-200 rounded-md p-2 text-gray-500">

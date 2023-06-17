@@ -51,7 +51,7 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     window.addEventListener("scroll", handleScroll);
   }, [ref]);
-  console.log(currentUser);
+
   return (
     <div
       id="header"
