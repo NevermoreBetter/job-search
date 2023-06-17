@@ -103,9 +103,7 @@ const JobList = () => {
                     {data.Name}
                   </h2>
                 </Link>
-                {data.Salary.map((salary) => {
-                  return `${salary}$`;
-                }).join("-")}
+                ${data.Salary}
                 <br />
                 <div className="flex gap-4 text-sm mt-3 font-bold">
                   <div className="bg-gray-200 rounded-md p-2 text-gray-500">

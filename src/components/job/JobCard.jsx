@@ -29,7 +29,72 @@ const MenuProps = {
   },
 };
 
-const cities = ["Миколаїв", "Київ", "Одеса"];
+const cities = [
+  "Вінниця",
+  "Дніпро",
+  "Донецьк",
+  "Житомир",
+  "Запоріжжя",
+  "Івано-Франківськ",
+  "Київ",
+  "Кропивницький",
+  "Луганськ",
+  "Луцьк",
+  "Львів",
+  "Миколаїв",
+  "Одеса",
+  "Полтава",
+  "Рівне",
+  "Суми",
+  "Тернопіль",
+  "Ужгород",
+  "Харків",
+  "Херсон",
+  "Хмельницький",
+  "Черкаси",
+  "Чернівці",
+  "Чернігів",
+];
+
+const jobSpecializations = [
+  "IT",
+  "Маркетинг",
+  "Фінанси",
+  "Банківська справа",
+  "Адміністрування",
+  "HR",
+  "Медицина",
+  "Освіта",
+  "Транспорт",
+  "Спорт",
+  "Культура",
+  "Туризм",
+  "Готельно-ресторанний бізнес",
+  "Юриспруденція",
+  "Будівництво",
+  "Архітектура",
+  "Дизайн",
+  "Реклама",
+  "PR",
+  "Журналістика",
+  "Сільське господарство",
+  "Логістика",
+  "Енергетика",
+  "Виробництво",
+  "Продажі",
+  "Нерухомість",
+  "Страхування",
+  "Телекомунікації",
+  "Автомобільна справа",
+  "Хімічна промисловість",
+  "Металургія",
+  "Машинобудування",
+  "Електроніка",
+  "Технічні науки",
+  "Науки про землю",
+];
+
+jobSpecializations.sort();
 
 const JobCard = () => {
   const [open, setOpen] = useState(false);
@@ -38,8 +103,9 @@ const JobCard = () => {
   const [description, setDescription] = useState();
   const [typeName, setTypeName] = useState();
   const [cityName, setCityName] = useState([]);
-  const [salary, setSalary] = useState([100, 1000]);
+  const [salary, setSalary] = useState(300);
   const [experience, setExperience] = useState();
+  const [category, setCategory] = useState();
   const { companyData, isLoading } = useGetCompany();
   const { currentUser } = useAuth();
   const userName = currentUser.displayName;
@@ -52,9 +118,8 @@ const JobCard = () => {
   const handleAddCity = (event, value) => {
     setCityName(value);
   };
-
-  const handleAddSalary = (event, newValue) => {
-    setSalary(newValue);
+  const handleAddCategory = (event, value) => {
+    setCategory(value);
   };
 
   const handleClick = () => {
@@ -81,7 +146,7 @@ const JobCard = () => {
       </IconButton>
     </>
   );
-
+  console.log(salary);
   async function handleAddJob() {
     if (
       name &&
@@ -90,6 +155,7 @@ const JobCard = () => {
       typeName &&
       cityName &&
       salary &&
+      category &&
       experience &&
       companyName &&
       currentUser.photoURL &&
@@ -103,6 +169,7 @@ const JobCard = () => {
         City: cityName,
         Salary: salary,
         Experience: experience,
+        Category: category,
         Company: companyName,
         UserPic: currentUser.photoURL,
         Date: new Date(),
@@ -126,7 +193,7 @@ const JobCard = () => {
           for="jobName"
           class="block mb-2  font-medium dark:text-gray-900 text-white"
         >
-          Посада:
+          Хто вам потрібен:
         </label>
         <input
           type="text"
@@ -139,11 +206,34 @@ const JobCard = () => {
         ></input>
       </div>
       <div className="mb-4">
+        <div id="jobSalary">
+          <label
+            for="website-admin"
+            class="block mb-2  font-medium dark:text-gray-900 text-white"
+          >
+            Зарплата:
+          </label>
+          <div class="flex">
+            <span class="inline-flex items-center px-3 text-sm dark:text-gray-900 dark:bg-gray-200 border border-r-0 dark:border-gray-300 rounded-l-md bg-gray-600 text-gray-400 border-gray-600">
+              $
+            </span>
+            <input
+              type="number"
+              value={salary}
+              onChange={(e) => setSalary(e.target.value)}
+              id="website-admin"
+              class="rounded-none rounded-r-lg dark:bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm dark:border-gray-300 p-2.5  bg-gray-700 border-gray-600 placeholder-gray-600 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Зарплатня"
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-4">
         <label
           for="jobDescription"
           class="block mb-2  font-medium dark:text-gray-900 text-white"
         >
-          Опис:
+          Опис вакансії:
         </label>
         <textarea
           id="jobDescription"
@@ -184,9 +274,9 @@ const JobCard = () => {
         </label>
         <div>
           <Autocomplete
-            className="min-w-[7rem]"
+            className="min-w-[9rem]"
             multiple
-            id="tags-standard"
+            id="jobCity"
             options={cities}
             onChange={handleAddCity}
             renderInput={(params) => (
@@ -195,24 +285,26 @@ const JobCard = () => {
           />
         </div>
       </div>
-      <div className="mb-4">
-        <label htmlFor="jobSalary" className="mr-4">
-          Зарплата
+      <div className="mb-4 flex items-center">
+        <label htmlFor="category" className="mr-4">
+          Категорія роботи
         </label>
-        <div id="jobSalary">
-          <Slider
-            getAriaLabel={() => "Salary range"}
-            value={salary}
-            max={10000}
-            step={100}
-            onChange={handleAddSalary}
-            valueLabelDisplay="auto"
+        <div>
+          <Autocomplete
+            disablePortal
+            className="min-w-[9rem]"
+            id="category"
+            options={jobSpecializations}
+            onChange={handleAddCategory}
+            renderInput={(params) => (
+              <TextField {...params} label="Категорія" />
+            )}
           />
         </div>
       </div>
       <div className="mb-4 flex items-center">
         <label htmlFor="jobExperience" className="mr-4">
-          Досвід
+          Мінімальний досвід:
         </label>
 
         <FormControl>

@@ -41,6 +41,7 @@ const JobEdit = ({ params }) => {
   const [typeName, setTypeName] = useState([]);
   const [salary, setSalary] = useState([100, 1000]);
   const [experience, setExperience] = useState();
+  const [category, setCategory] = useState();
   const [open, setOpen] = useState(false);
   const [jobsData, setJobsData] = useState([]);
   const nameInputRef = useRef();
@@ -60,6 +61,10 @@ const JobEdit = ({ params }) => {
 
   const handleAddSalary = (event, newValue) => {
     setSalary(newValue);
+  };
+
+  const handleAddCategory = (event, value) => {
+    setCategory(value);
   };
 
   const handleClose = (event, reason) => {
@@ -109,7 +114,8 @@ const JobEdit = ({ params }) => {
     updType,
     updExperience,
     updCity,
-    updSalary
+    updSalary,
+    updCategory
   ) => {
     setName(updName);
     setDescription(updDescription);
@@ -117,22 +123,35 @@ const JobEdit = ({ params }) => {
     setExperience(updExperience);
     setCityName(updCity);
     setSalary(updSalary);
+    setCategory(updCategory);
   };
 
   async function handleUpdateJob() {
     try {
-      const fieldsToEdit = doc(dbRef, id);
-      await updateDoc(fieldsToEdit, {
-        Name: name,
-        Description: description,
-        Author: userName,
-        Type: typeName,
-        City: cityName,
-        Salary: salary,
-        Company: companyName,
-        Experience: experience,
-        UserId: currentUser.uid,
-      });
+      if (
+        name &&
+        description &&
+        userName &&
+        typeName &&
+        cityName &&
+        salary &&
+        category &&
+        experience &&
+        companyName
+      ) {
+        const fieldsToEdit = doc(dbRef, id);
+        await updateDoc(fieldsToEdit, {
+          Name: name,
+          Description: description,
+          Author: userName,
+          Type: typeName,
+          City: cityName,
+          Salary: salary,
+          Company: companyName,
+          Experience: experience,
+          UserId: currentUser.uid,
+        });
+      }
       handleClick();
     } catch (error) {
       console.log(error);
@@ -154,7 +173,8 @@ const JobEdit = ({ params }) => {
         user.Type,
         user.Experience,
         user.City,
-        user.Salary
+        user.Salary,
+        user.Category
       );
     }
   }, [jobsData]);
@@ -203,14 +223,14 @@ const JobEdit = ({ params }) => {
             </label>
 
             <FormControl>
-              <InputLabel id="demo-simple-select-label1">Вибір</InputLabel>
+              <InputLabel id="type">Вибір</InputLabel>
               <Select
-                labelId="demo-simple-select-label1"
+                labelId="type"
                 className="min-w-[10rem]"
                 id="jobType"
                 value={typeName}
                 label="Вибір"
-                onChange={(e) => setDistance(e.target.value)}
+                onChange={(e) => setTypeName(e.target.value)}
               >
                 <MenuItem value="Дистанційно">Дистанційно</MenuItem>
                 <MenuItem value="В офісі">В офісі</MenuItem>
@@ -258,12 +278,13 @@ const JobEdit = ({ params }) => {
             </label>
 
             <FormControl>
+              <InputLabel id="experience">Вибір</InputLabel>
               <Select
+                labelId="experience"
                 className="min-w-[7rem]"
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
-                displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
+                label="Вибір"
               >
                 <MenuItem value="Без досвіду">Без досвіду</MenuItem>
                 <MenuItem value="1 рік">1 рік</MenuItem>
