@@ -49,6 +49,7 @@ const cities = [
 ];
 
 const jobSpecializations = [
+  "Всі",
   "IT",
   "Маркетинг",
   "Фінанси",

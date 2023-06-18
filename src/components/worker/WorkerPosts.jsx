@@ -6,14 +6,86 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import Link from "next/link";
+import Slider from "@mui/material/Slider";
 import useGetWorkers from "@/hooks/fetchWorkers";
 import { data } from "autoprefixer";
 
+const cities = [
+  "Всі",
+  "Вінниця",
+  "Дніпро",
+  "Донецьк",
+  "Житомир",
+  "Запоріжжя",
+  "Івано-Франківськ",
+  "Київ",
+  "Кропивницький",
+  "Луганськ",
+  "Луцьк",
+  "Львів",
+  "Миколаїв",
+  "Одеса",
+  "Полтава",
+  "Рівне",
+  "Суми",
+  "Тернопіль",
+  "Ужгород",
+  "Харків",
+  "Херсон",
+  "Хмельницький",
+  "Черкаси",
+  "Чернівці",
+  "Чернігів",
+];
+
+const jobSpecializations = [
+  "Всі",
+  "IT",
+  "Маркетинг",
+  "Фінанси",
+  "Банківська справа",
+  "Адміністрування",
+  "HR",
+  "Медицина",
+  "Освіта",
+  "Транспорт",
+  "Спорт",
+  "Культура",
+  "Туризм",
+  "Готельно-ресторанний бізнес",
+  "Юриспруденція",
+  "Будівництво",
+  "Архітектура",
+  "Дизайн",
+  "Реклама",
+  "PR",
+  "Журналістика",
+  "Сільське господарство",
+  "Логістика",
+  "Енергетика",
+  "Виробництво",
+  "Продажі",
+  "Нерухомість",
+  "Страхування",
+  "Телекомунікації",
+  "Автомобільна справа",
+  "Хімічна промисловість",
+  "Металургія",
+  "Машинобудування",
+  "Електроніка",
+  "Технічні науки",
+  "Науки про землю",
+];
+
+jobSpecializations.sort();
+
 const WorkerPosts = () => {
   const { workersData, isLoading } = useGetWorkers();
-  const [cityFilter, setCityFilter] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all");
+  const [cityFilter, setCityFilter] = useState("Всі");
+  const [typeFilter, setTypeFilter] = useState("Всі");
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("Всі");
+  const [salaryFilter, setSalaryFilter] = useState([100, 10000]);
   const {
     transcript,
     listening,
@@ -22,13 +94,24 @@ const WorkerPosts = () => {
   } = useSpeechRecognition();
   const [isSticky, setIsSticky] = useState(false);
 
+  const handleChangeSalary = (event, newValue) => {
+    setSalaryFilter(newValue);
+  };
   const dataToShow = workersData
     .filter((data) => {
-      if (cityFilter === "all") return true;
+      if (cityFilter === "Всі") return true;
       return data.City.includes(cityFilter);
     })
     .filter((data) => {
-      if (typeFilter === "all") return true;
+      if (salaryFilter[0] === 0 && salaryFilter[1] === 0) return true;
+      return data.Salary >= salaryFilter[0] && data.Salary <= salaryFilter[1];
+    })
+    .filter((data) => {
+      if (categoryFilter === "Всі") return true;
+      return data.Category.includes(categoryFilter);
+    })
+    .filter((data) => {
+      if (typeFilter === "Всі") return true;
       return data.Type.includes(typeFilter);
     })
     .filter((data) => {
@@ -59,7 +142,7 @@ const WorkerPosts = () => {
 
   return (
     <div className="container flex justify-start mt-[5rem] mb-[5rem] relative z-auto">
-      <div className="flex flex-col justify-start gap-8 mr-[15%]">
+      <div className="w-1/6 flex flex-col justify-start gap-8 mr-[10%]">
         <div className="gap-2">
           <label
             for="countries"
@@ -72,10 +155,9 @@ const WorkerPosts = () => {
             onChange={(e) => setCityFilter(e.target.value)}
             class="dark:bg-gray-50 border dark:border-gray-300 dark:text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
-            <option value="all">Всі</option>
-            <option value="Київ">Київ</option>
-            <option value="Миколаїв">Миколаїв</option>
-            <option value="Одеса">Одеса</option>
+            {cities.map((c) => {
+              return <option>{c}</option>;
+            })}
           </select>
         </div>
         <div className="gap-2">
@@ -90,16 +172,61 @@ const WorkerPosts = () => {
             onChange={(e) => setTypeFilter(e.target.value)}
             class="dark:bg-gray-50 border dark:border-gray-300 dark:text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
-            <option value="all">Всі</option>
+            <option value="Всі">Всі</option>
             <option value="В офісі">В офісі</option>
             <option value="Фріланс">Фріланс</option>
             <option value="Дистанційно">Дистанційно</option>
           </select>
         </div>
+        <div className="gap-2">
+          <label
+            htmlFor="jobSalary"
+            className="block mb-2 text-lg font-medium dark:text-gray-900 text-white"
+          >
+            Зарплата
+          </label>
+          <div id="jobSalary">
+            <Slider
+              getAriaLabel={() => "Зарплата"}
+              value={salaryFilter}
+              max={10000}
+              step={100}
+              onChange={handleChangeSalary}
+              valueLabelDisplay="auto"
+            />
+          </div>
+        </div>
+        <div>
+          <label
+            htmlFor="category"
+            className="block mb-2 text-lg font-medium dark:text-gray-900 text-white"
+          >
+            Категорія
+          </label>
+          <div className="flex flex-wrap">
+            {jobSpecializations.map((job) => {
+              return (
+                <p
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCategoryFilter(e.target.textContent);
+                  }}
+                  className={` text-xs font-medium mr-2 px-2.5 py-0.5 rounded bg-gray-700 text-gray-300 w-fit cursor-pointer mb-2 ${
+                    job == categoryFilter
+                      ? "dark:bg-black dark:text-white"
+                      : "dark:bg-gray-300 dark:text-gray-800"
+                  }`}
+                >
+                  {job}
+                </p>
+              );
+            })}
+          </div>
+        </div>
       </div>
       <div className="max-w-[60%] flex-1 flex flex-col items-center">
         <form
-          class={`flex items-center  transition-all duration-500 ease-in-out ${
+          class={`flex items-center  transition-Всі duration-500 ease-in-out ${
             isSticky ? "sticky top-0 bg-white w-[150%]" : "bg-white w-full"
           }`}
         >

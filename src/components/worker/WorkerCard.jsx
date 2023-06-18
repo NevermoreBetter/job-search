@@ -377,7 +377,7 @@ const WorkerCard = () => {
               required
             ></textarea>
           </div>
-          <div className="mb-4 ">
+          <div className="mb-4">
             <label
               for="jobExperience"
               class="block mb-2  font-medium dark:text-gray-900 text-white"
@@ -394,7 +394,7 @@ const WorkerCard = () => {
               required
             ></textarea>
           </div>
-          <div className="flex mb-4 items-center ">
+          <div className="flex justify-between mb-4 items-center ">
             <label htmlFor="workerType" className="mr-4 ">
               Тип зайнятості:
             </label>
@@ -426,7 +426,7 @@ const WorkerCard = () => {
               </Select>
             </FormControl>
           </div>
-          <div className="mb-4 flex items-center">
+          <div className="mb-4 flex justify-between items-center">
             <label htmlFor="workerCity" className="mr-4 ">
               Місто:
             </label>
@@ -443,14 +443,14 @@ const WorkerCard = () => {
               />
             </div>
           </div>
-          <div className="mb-4 flex items-center">
+          <div className="mb-4 flex justify-between items-center">
             <label htmlFor="category" className="mr-4">
               Категорія роботи:
             </label>
             <div>
               <Autocomplete
                 disablePortal
-                className="min-w-[9rem]"
+                className="min-w-[10rem]"
                 id="category"
                 options={jobSpecializations}
                 onChange={handleAddCategory}
@@ -460,14 +460,14 @@ const WorkerCard = () => {
               />
             </div>
           </div>
-          <div className="mb-4 flex items-center">
+          <div className="mb-4 flex justify-between items-center">
             <label htmlFor="workerExperience" className="mr-4 ">
               Досвід роботи:
             </label>
 
             <FormControl>
               <Select
-                className="min-w-[7rem]"
+                className="min-w-[10rem]"
                 value={experience}
                 onChange={(e) => {
                   setExperience(e.target.value);
