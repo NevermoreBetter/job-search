@@ -323,6 +323,7 @@ const WorkerPosts = () => {
                 <div className="bg-gray-200 rounded-md p-2  text-pink-500">
                   {data.City.join(", ")}
                 </div>
+                <div className="hidden">{data.Category}</div>
               </div>
               <br />
               <div className="break-words">{data.Description}</div>
