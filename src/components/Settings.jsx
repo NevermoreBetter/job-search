@@ -40,7 +40,6 @@ const Settings = () => {
 
   return (
     <div className="Settings container">
-      <Navbar />
       <div className="mt-[5rem]">Settings</div>
       <form onSubmit={handleUpdateProfile}>
         <div>
@@ -81,7 +80,6 @@ const Settings = () => {
           //   }}
         />
       </form>
-      <Footer />
     </div>
   );
 };
