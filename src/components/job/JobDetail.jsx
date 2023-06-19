@@ -93,12 +93,7 @@ const JobDetail = ({ params }) => {
               <div className="w-[75%]">
                 <h3 className="detail-name break-words">{data.Name}</h3>
                 <br />
-                <div className="mb-4">
-                  {data.Salary.map((salary) => {
-                    return `${salary}$`;
-                  }).join("-")}{" "}
-                  / місяць
-                </div>
+                <div className="mb-4">${data.Salary}/місяць</div>
                 <br />
                 <div
                   style={{ whiteSpace: "pre-line" }}
