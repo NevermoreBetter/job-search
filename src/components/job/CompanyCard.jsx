@@ -79,12 +79,10 @@ const CompanyCard = () => {
       })
       .then((fileUrl) => {
         setAvatar(fileUrl);
-        alert(fileUrl);
       })
       .catch((error) => {
         console.error(error);
       });
-    alert(avatar);
   };
 
   async function handleAddCompany() {
@@ -102,7 +100,6 @@ const CompanyCard = () => {
 
   async function handleUpdateCompany() {
     try {
-      alert(name);
       const fieldsToEdit = doc(dbRef, id);
       await updateDoc(fieldsToEdit, {
         Name: name,
@@ -180,7 +177,6 @@ const CompanyCard = () => {
                   Company: name,
                 });
               });
-              alert("Updated");
             });
           handleClick();
         }}
