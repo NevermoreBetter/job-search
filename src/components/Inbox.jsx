@@ -64,14 +64,18 @@ const Inbox = () => {
               {message.Message}
             </div>
             <br />
-            <div>
-              <a
-                href={message.Resume}
-                className="bg-gray-200 rounded-md p-2 text-orange-500"
-              >
-                Відкрити резюме
-              </a>
-            </div>
+            {acc ? (
+              ""
+            ) : (
+              <div>
+                <a
+                  href={message.Resume}
+                  className="bg-gray-200 rounded-md p-2 text-orange-500"
+                >
+                  Відкрити резюме
+                </a>
+              </div>
+            )}
           </div>
         );
       })}
