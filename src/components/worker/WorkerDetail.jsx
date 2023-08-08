@@ -38,6 +38,7 @@ const WorkerDetail = ({ params }) => {
     addDoc(messageDbRef, {
       Message: message,
       SenderId: currentUser.uid,
+
       SenderName: currentUser.displayName,
       SenderPic: currentUser.photoURL,
       RecieverId: workerDetails.map((data) => {
